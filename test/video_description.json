@@ -1,0 +1,81 @@
+{
+  "nazwa_pliku": "test_video.mp4",
+  "statystyki": {
+    "total_fragmentow": 11,
+    "segmenty_audio": 0,
+    "opisy_klatek": 11
+  },
+  "audio": {
+    "opis": "Transkrypcja audio z wideo",
+    "segmenty": []
+  },
+  "video": {
+    "opis": "Opisy klatek wideo wygenerowane przez Gemma Vision",
+    "klatki": [
+      {
+        "element_id": "video_second_0_00m00s",
+        "content": "[00:00]\n[Audio] Muzyka\n[Video] Oto szczegółowy opis obrazu:\n\nObraz przedstawia widok kosmosu, prawdopodobnie widok naszej galaktyki, Drogi Mlecznej, widziany z góry lub z boku. \n\n*   **Dominujące kolory:**  Głównie czarny, symbolizujący głębię kosmosu, z odcieniami błękitu, szarości i bieli.\n*   **Struktury:** Widoczne są rozległe, spiralne struktury z gazu i pyłu, które tworzą charakterystyczną formę galaktyki.  Widać gęstsze obszary, które prawdopodobnie oznaczają miejsca powstawania gwiazd.\n*   **Jasne punkty:**  Widoczne są punkty światła, które najprawdopodobniej reprezentują gwiazdy. \n*   **Dodatkowe elementy:** Na dole prawej strony widoczny jest logo \"COUB\" oraz podpis \"by @hermione\".\n\nObraz jest bardzo sugestywny i oddaje potęgę i piękno kosmosu."
+      },
+      {
+        "element_id": "video_second_1_00m01s",
+        "content": "[00:01]\n[Audio] Muzyka\n[Video] Oczywiście, opiszę szczegółowo co widać na obrazie:\n\n**Główny element:**\n\nObraz przedstawia fragment galaktyki, prawdopodobnie galaktyki spiralnej. Widzimy obfitość gwiazd, pyłu i gazu kosmicznego.\n\n**Szczegóły:**\n\n*   **Barwy:** Dominują odcienie głębokiej zieleni, błękitu i fioletu, które są typowe dla obrazów odległych galaktyk, gdzie światło jest przesunięte ku czerwieni (redshift).\n*   **Struktura:** Widoczna jest spirala z gwiazd, pyłu i gazu, tworząca charakterystyczny kształt galaktyki spiralnej.\n*   **Jasne obszary:**  Wewnątrz spirali są wyraźne, jaśniejsze obszary - prawdopodobnie miejsca intensywnej formacji gwiazd.\n*   **Pył i gaz:** Duża ilość pyłu i gazu sprawia, że niektóre obszary wydają się ciemniejsze, tworząc unikalną strukturę.\n*   **Krawędzi:** Krawędzie galaktyki są ostre, sugerując, że galaktyka jest odległa i rozmiar jest zredukowany do rozmiaru dysku.\n\n**Dodatkowe elementy:**\n\n*   **Znak wodny:** Na obrazie znajduje się znak wodny \"COUB by @hermione\".\n\nOgólnie, obraz ten to oszałamiający widok odległej galaktyki, który zapiera dech w piersiach i ukazuje ogrom wszechświata."
+      },
+      {
+        "element_id": "video_second_2_00m02s",
+        "content": "[00:02]\n[Audio] Muzyka\n[Video] Na obrazie widoczne jest mgławica, prawdopodobnie mgławica planetarna. Jest ona przedstawiona w ciemnych, granatowych tonacjach, co tworzy głęboki, kosmiczny klimat. \n\nOto szczegóły:\n\n*   **Centralny element:** W lewej części obrazu znajduje się jasna, wirująca struktura, która jest centralną częścią mgławicy. Wygląda na byłą gwiazdą, która w procesie ewolucji odrzuciła swoje zewnętrzne warstwy, tworząc te piękne, rozproszone chmury gazu i pyłu.\n*   **Kolorystyka:** Dominują odcienie granatu, ciemnej zieleni i błękitu, z miejscami jasnych, białych punktów.\n*   **Efekty:** Obraz wydaje się być pełen delikatnych gradacji kolorów i subtelnych efektów świetlnych.\n*   **Kąt widzenia:** Zdjęcie jest wykonane z perspektywy, która sugeruje, że mgławica znajduje się bardzo daleko.\n*   **Dodatkowe elementy:** W prawym dolnym rogu znajduje się znak wodny \"COUB by @hermione\".\n\nOgólnie, obraz przedstawia niezwykle piękny i tajemniczy widok kosmicznej mgławicy, która jest wynikiem śmierci i odrodzenia gwiazdy."
+      },
+      {
+        "element_id": "video_second_3_00m03s",
+        "content": "[00:03]\n[Audio] Muzyka\n[Video] Na obrazie znajduje się stylizowana, kubistyczna ilustracja głowy dinozaura, prawdopodobnie pterodaktyla lub innego latającego gady. Wykonana jest z geometrycznych kształtów, a poszczególne elementy są w odcieniach niebieskiego, fioletu i szarości. \n\n*   **Głowa:** Wyrazista, z dużym dziobem skierowanym w górę.\n*   **Oczy:** Przedstawione jako proste, ciemne plamy.\n*   **Skrzydła:** Wyraźnie zaznaczone, dodają dynamiki kompozycji.\n*   **Tło:** Całość jest umieszczona na całkowicie czarnym tle.\n*   **Znak wodny:** W prawym dolnym rogu widoczny jest znak wodny z napisem \"COUB by @Hermione\".\n\nOgólny efekt jest minimalistyczny i nowoczesny, skupiający się na formie i kolorystyce."
+      },
+      {
+        "element_id": "video_second_4_00m04s",
+        "content": "[00:04]\n[Audio] Muzyka\n[Video] Na obrazie znajduje się stylizowana, geometryczna ilustracja wieloryba.\n\n**Wygląd Wieloryba:**\n\n*   **Kształt:** Wieloryb przedstawiony jest w sposób abstrakcyjny, składający się z trójkątnych i prostokątnych kształtów.\n*   **Kolorystyka:**  Główny kolor to odcienie szarości i bieli, z delikatnymi akcentami fioletu.\n*   **Szczegóły:** Widać uproszczoną głowę z okiem i otwieranym pyskiem, co sugeruje radość lub zaskoczenie.\n*   **Perspektywa:**  Wieloryb jest pokazany pod kątem, co dodaje dynamiki.\n\n**Tło:**\n\n*   **Kolor:** Tło jest czarne, co pozwala na wyeksponowanie wieloryba.\n*   **Elementy:** Widoczne są niebieskie, geometryczne kształty, przypominające fale lub wodę, które dodają głębi i dynamiki.\n\n**Dodatkowe elementy:**\n\n*   **Sygnatura:** W prawym dolnym rogu znajduje się nazwa platformy \"COUB\" oraz sygnatura \"@hermione\".\n\nOgólna estetyka obrazu jest nowoczesna i minimalistyczna, a wykorzystanie geometrii i uproszczonych kształtów sprawia, że jest on bardzo charakterystyczny."
+      },
+      {
+        "element_id": "video_second_5_00m05s",
+        "content": "[00:05]\n[Audio] Muzyka\n[Video] Na obrazie widoczna jest stylizowana, cyfrowa ilustracja ryby, prawdopodobnie tuńczyka lub innej dużej ryby oceanicznej. Grafika wykonana jest w formie geometrycznych kształtów, z użyciem ostrych kątów i płaskich powierzchni. Kolory dominujące to odcienie szarości, błękitu i fioletu, które nadają ilustracji nowoczesny, minimalistyczny charakter. \n\nOto bardziej szczegółowy opis:\n\n*   **Kształt:** Ryba jest przedstawiona w profilu, z wyraźnie zaznaczonym profilu głowy, ciała i ogona.\n*   **Kolorystyka:** Ciało ryby jest głównie szare z fioletowymi refleksami. Brzuch jest jaśniejszy, a ogon i niektóre elementy głowy mają błękitne akcenty.\n*   **Styl:** Ilustracja jest bardzo uproszczona i geometryczna, bez detali jak łuski czy płetwy.\n*   **Oczy:** Ryba ma stylizowany, czarny oczko.\n*   **Tło:** Tło jest czarne, co podkreśla bryłę ryby i nadaje jej trójwymiarowy wygląd.\n*   **Znak wodny:** Na obrazie widoczny jest znak wodny \"COUB by @Hermione\".\n\nCałość grafiki ma charakter abstrakcyjny i estetyczny, z wyraźnie widocznym wpływem cyfrowej sztuki i designu."
+      },
+      {
+        "element_id": "video_second_6_00m06s",
+        "content": "[00:06]\n[Audio] Muzyka\n[Video] Oto szczegółowy opis obrazu:\n\nObraz przedstawia portret kobiety w stylu geometrycznym, przypominającym pikselart, ale z bardziej zaawansowaną stylizacją. Kobieta jest widoczna w profil, z głową pochyloną w dół.\n\n**Cechy portretu:**\n\n*   **Geometria:** Cała twarz i włosy są zbudowane z ostrych, trójkątnych i prostokątnych kształtów.\n*   **Kolory:** Dominują odcienie błękitu, szarości, fioletu i bieli. Kolory są płaskie, bez gradacji, co podkreśla geometryczny charakter obrazu.\n*   **Wyraz twarzy:** Wygląda na smutną lub zamyśloną, z wyraźnie zaznaczonym nosem i ustami.\n*   **Włosy:** Włosy są upięte, a ich geometria podkreśla ich strukturę.\n*   **Tło:** Tło jest czarne, co wyeksponuje obraz.\n*   **Znak wodny:** W prawym dolnym rogu znajduje się znak wodny \"COUB by @hermione\", co sugeruje, że obraz został opublikowany na platformie COUB.\n\nOgólnie obraz ma bardzo charakterystyczny, stylizowany wygląd, który łączy elementy pikselartu i geometrii."
+      },
+      {
+        "element_id": "video_second_7_00m07s",
+        "content": "[00:07]\n[Audio] Muzyka\n[Video] Oto szczegółowy opis obrazu:\n\nObraz przedstawia postać, prawdopodobnie portret osoby, w bardzo stylizowanym i geometrycznym stylu. Wygląda na to, że jest to rysunek lub grafika cyfrowa, wykonana w formie kubistycznej, z wyraźnymi, ostrymi krawędziami i trójkątnymi kształtami.\n\n**Cechy obrazu:**\n\n*   **Styl:** Kubizm, charakteryzujący się rozbiciem obiektów na geometryczne kształty i przedstawieniem ich z różnych perspektyw jednocześnie.\n*   **Kolorystyka:** Użyto ograniczonej palety kolorów. Dominują odcienie niebieskiego, szarości i bieli. Kolory są płaskie, bez gradientów i cieniowania.\n*   **Wyraz twarzy:** Postać ma smutny, melancholijny wyraz twarzy. Widać to po opuszczonym kąciku ust i lekko podwiniętych brwiach.\n*   **Perspektywa:** Twarz jest przedstawiona z nietypowej perspektywy, lekko pochylonej.\n*   **Dodatkowe elementy:** W górnej części obrazu widoczne są elementy przypominające włosy lub element ubrania, również przedstawione w geometrycznej formie.\n*   **Podpis:** W prawym dolnym rogu widoczny jest podpis \"COUB by @hermione\". Sugeruje to, że obraz został stworzony przez użytkownika o nicku \"hermione\" na platformie Coub.\n\nOgólnie, obraz jest minimalistyczny, ale wyrazisty, oddający emocje poprzez formę i kolor."
+      },
+      {
+        "element_id": "video_second_8_00m08s",
+        "content": "[00:08]\n[Audio] Muzyka\n[Video] Oto szczegółowy opis obrazu:\n\nNa obrazie widoczny jest portret kobiety w stylu geometrycznym, przypominającym fragmenty szkła lub kafelków. Jej twarz jest złożona z ostrych, trójkątnych i trapezoidalnych kształtów, co tworzy charakterystyczny, abstrakcyjny wygląd.\n\n**Kolorystyka:**\n\n*   **Twarz:** Odcienie szarości i bieli, z ciemniejszymi akcentami podkreślającymi rysy twarzy (oczy, usta).\n*   **Włosy:** Głównie ciemne, granatowo-czarne, z wyraźnymi, geometrycznymi liniami.\n*   **Usta:** Wyraźna, czerwona warga, co stanowi mocny kontrast z resztą kolorystyki.\n\n**Wyraz Twarzy:**\n\nKobieta wydaje się być pochylona, jej głowa skierowana w dół. Wyraz twarzy jest ciężki, melancholijny, sugerujący smutek lub zadumę.\n\n**Styl:**\n\nObraz ma charakter kubistyczny, charakteryzujący się dekonstrukcją i uproszczeniem form. Jest to styl abstrakcyjny, a nie realistyczny. \n\n**Dodatkowe elementy:**\n\n*   Na dole obrazu widoczny jest napis \"COUB by @Hermione\".\n\nCałość obrazu jest utrzymana w stonowanej palecie barw, a geometryczna forma nadaje mu oryginalny i interesujący wygląd."
+      },
+      {
+        "element_id": "video_second_9_00m09s",
+        "content": "[00:09]\n[Audio] Muzyka\n[Video] Na obrazie widoczna jest portret twarzy kobiety, wykonany w stylu geometrycznym i z użyciem ograniczonej palety barw.\n\n**Szczegóły:**\n\n*   **Styl:** Geometria, stylizowane, z użyciem prostych kształtów i ostrych linii.\n*   **Kolorystyka:** Użyto głównie odcieni błękitu, szarości, fioletu i czerni. Kolory są stonowane i tworzą nieco melancholijny nastrój.\n*   **Twarz:** Kobieta ma spuszczone głowę, co sugeruje smutek lub refleksję. Jej rysy są stylizowane, ale rozpoznawalne. Widoczny jest profil.\n*   **Włosy:** Włosy są czarne i również przedstawione w geometryczny sposób.\n*   **Usta:** Usta są pomalowane na czerwono, co stanowi kontrast z resztą palety barw.\n*   **Podpis:** W prawym dolnym rogu znajduje się znak wodny \"COUB\" oraz podpis \"@hermione\".\n\nOgólnie, obrazek ma ciekawą i minimalistyczną estetykę."
+      },
+      {
+        "element_id": "video_second_10_00m10s",
+        "content": "[00:10]\n[Audio] Muzyka\n[Video] [brak opisu klatki]"
+      }
+    ]
+  },
+  "zapytanie_testowe": {
+    "query": "Co znajduje się na filmie?",
+    "najlepsze_dopasowania": [
+      {
+        "element": "video_second_0_00m00s",
+        "podobienstwo": "59.1%",
+        "fragment": "[00:00]\n[Audio] Muzyka\n[Video] Oto szczegółowy opis obrazu:\n\nObraz przedstawia widok kosmosu, prawdo..."
+      },
+      {
+        "element": "video_second_9_00m09s",
+        "podobienstwo": "58.4%",
+        "fragment": "[00:09]\n[Audio] Muzyka\n[Video] Na obrazie widoczna jest portret twarzy kobiety, wykonany w stylu geo..."
+      },
+      {
+        "element": "video_second_3_00m03s",
+        "podobienstwo": "58.0%",
+        "fragment": "[00:03]\n[Audio] Muzyka\n[Video] Na obrazie znajduje się stylizowana, kubistyczna ilustracja głowy din..."
+      }
+    ]
+  }
+}

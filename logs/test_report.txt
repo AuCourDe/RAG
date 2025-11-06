@@ -1,0 +1,98 @@
+RAPORT TESTÓW SYSTEMU RAG v4
+================================================================================
+
+✅ Plik testowy PDF
+   Znaleziono: sample_test_files/test_document.pdf
+✅ Plik testowy Image
+   Znaleziono: sample_test_files/test_image.png
+✅ Plik testowy Audio
+   Znaleziono: sample_test_files/test_audio.mp3
+✅ Plik testowy Video
+   Znaleziono: sample_test_files/test_video.mp4
+✅ Inicjalizacja RAGSystem
+   System zainicjalizowany
+✅ DocumentProcessor
+   Procesor dokumentów
+✅ EmbeddingProcessor
+   Procesor embeddingów
+✅ VectorDatabase
+   Baza wektorowa
+✅ ModelProvider
+   Provider modelu LLM
+✅ HybridSearch
+   Wyszukiwanie hybrydowe
+✅ Baza pusta na start
+   Fragmentów: 0
+✅ PDF: Przetwarzanie
+   Fragmentów: 1251
+✅ PDF: Chunk ma ID
+   ID: c422b62a-c07b-40ff-8...
+✅ PDF: Chunk ma content
+   Content: 471 znaków
+✅ PDF: Chunk ma source_file
+   Source: test_document.pdf
+✅ PDF: Chunk ma chunk_type
+   Type: text
+✅ PDF: Tworzenie embeddingów
+   Embeddings: 1251
+✅ PDF: Dodanie do bazy
+   Dodano 1251 fragmentów
+✅ PDF: W bazie wektorowej
+   W bazie: 1251 fragmentów
+✅ Image: Przetwarzanie
+   Fragmentów: 1
+✅ Image: Ma opis
+   Opis: 1281 znaków
+✅ Image: Chunk type
+   Type: image_description
+✅ Image: Dodanie do bazy
+   W bazie: 1252
+✅ BM25: Przebudowa indeksu
+   Index przebudowany
+✅ Wyszukiwanie: Wektor
+   Znaleziono: 3 wyników
+✅ Wyszukiwanie: Ma treść
+   Content: 415 znaków
+✅ Wyszukiwanie: Hybrydowe + Reranker
+   Znaleziono: 3 wyników
+✅ Wyszukiwanie: Hybrydowe bez Reranker
+   Znaleziono: 3
+✅ Wyszukiwanie: Tylko BM25
+   Znaleziono: 3 wyników
+✅ Odpowiedź: Domyślne parametry
+   Długość: 993 znaków
+✅ Odpowiedź: Bez błędów
+   Odpowiedź wygenerowana poprawnie
+✅ Odpowiedź: Custom parametry
+   Długość: 1202 znaków
+❌ Audio: Przetwarzanie
+   Fragmentów: 0
+✅ Monitoring: GPU Detection
+   GPU: Dostępny
+✅ Monitoring: CPU
+   CPU: 2.5%
+✅ Monitoring: RAM
+   RAM: 45.4%
+✅ HybridSearch: BM25 dostępny
+   BM25 włączony
+✅ HybridSearch: Reranker dostępny
+   Reranker włączony
+✅ HybridSearch: Ma metodę search()
+   Metoda search() dostępna
+✅ HybridSearch: Ma metodę search_bm25_only()
+   Metoda search_bm25_only() dostępna
+✅ ModelProvider: Dostępny
+   Provider: gemma3:12b
+✅ ModelProvider: Generowanie
+   Odpowiedź: 176 znaków
+✅ Metadata: source_file
+   source_file: test_document.pdf
+✅ Metadata: page_number
+   page_number: 1
+✅ Metadata: chunk_type
+   chunk_type: text
+
+================================================================================
+Passed: 44/45
+Failed: 1/45
+Success Rate: 97.8%

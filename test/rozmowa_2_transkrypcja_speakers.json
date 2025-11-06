@@ -1,0 +1,946 @@
+{
+  "plik": "rozmowa (2).mp3",
+  "segmentow": 188,
+  "transkrypcja": [
+    {
+      "nr": 1,
+      "element_id": "audio_segment_1_00m00s",
+      "content": "[00:00 - 00:04] [SPEAKER_0] Dzień dobry, Bartomiej Serafiński, to bym właściwie mogł pomóc?"
+    },
+    {
+      "nr": 2,
+      "element_id": "audio_segment_2_00m04s",
+      "content": "[00:04 - 00:06] [SPEAKER_0] Przepraszam, niech pan się jeszcze raz przedstawi."
+    },
+    {
+      "nr": 3,
+      "element_id": "audio_segment_3_00m06s",
+      "content": "[00:06 - 00:07] [SPEAKER_0] Serafiński, moje nazwisko."
+    },
+    {
+      "nr": 4,
+      "element_id": "audio_segment_4_00m08s",
+      "content": "[00:08 - 00:08] [SPEAKER_0] Serafiński."
+    },
+    {
+      "nr": 5,
+      "element_id": "audio_segment_5_00m08s",
+      "content": "[00:08 - 00:09] [SPEAKER_0] Tak."
+    },
+    {
+      "nr": 6,
+      "element_id": "audio_segment_6_00m09s",
+      "content": "[00:09 - 00:10] [SPEAKER_0] Zapiszę sobie tylko."
+    },
+    {
+      "nr": 7,
+      "element_id": "audio_segment_7_00m15s",
+      "content": "[00:15 - 00:18] [SPEAKER_1] Proszę pana, ja dzwonię z Rawicza, moje nazwisko Sobczak."
+    },
+    {
+      "nr": 8,
+      "element_id": "audio_segment_8_00m19s",
+      "content": "[00:19 - 00:23] [SPEAKER_1] I mam numer telefonu 546-4882."
+    },
+    {
+      "nr": 9,
+      "element_id": "audio_segment_9_00m23s",
+      "content": "[00:23 - 00:24] [SPEAKER_1] Tak."
+    },
+    {
+      "nr": 10,
+      "element_id": "audio_segment_10_00m24s",
+      "content": "[00:24 - 00:25] [SPEAKER_1] Kierunkowy 065."
+    },
+    {
+      "nr": 11,
+      "element_id": "audio_segment_11_00m25s",
+      "content": "[00:25 - 00:34] [SPEAKER_1] I proszę pana, ktoś bez mojej wiedzy wlazł z waszej Tele2 na moją linię i sobie życzy, żebym przez Tele2 dzwonił."
+    },
+    {
+      "nr": 12,
+      "element_id": "audio_segment_12_00m36s",
+      "content": "[00:36 - 00:38] [SPEAKER_2] Pan, rozumiem, żadnej umowy z nami nie zawiera?"
+    },
+    {
+      "nr": 13,
+      "element_id": "audio_segment_13_00m38s",
+      "content": "[00:38 - 00:42] [SPEAKER_2] Proszę pana, gdybym zawierał, to nie jestem aż takim idiotą, żebym dzwonił do was i miał problem, nie?"
+    },
+    {
+      "nr": 14,
+      "element_id": "audio_segment_14_00m45s",
+      "content": "[00:45 - 00:50] [SPEAKER_3] Proszę pana, to znaczy może być sytuacja tego typu, że osobie o podobnym numerze telefonu,"
+    },
+    {
+      "nr": 15,
+      "element_id": "audio_segment_15_00m50s",
+      "content": "[00:50 - 00:54] [SPEAKER_3] przez pomyłkę została podłączona preselekcja na pański numer telefonu,"
+    },
+    {
+      "nr": 16,
+      "element_id": "audio_segment_16_00m54s",
+      "content": "[00:54 - 00:57] [SPEAKER_3] i dlatego"
+    },
+    {
+      "nr": 17,
+      "element_id": "audio_segment_17_00m57s",
+      "content": "[00:57 - 00:59] [SPEAKER_3] taka sytuacja ma miejsce,"
+    },
+    {
+      "nr": 18,
+      "element_id": "audio_segment_18_00m59s",
+      "content": "[00:59 - 01:01] [SPEAKER_3] że Pan po zbrodniu samego zera ma nasz komunikat."
+    },
+    {
+      "nr": 19,
+      "element_id": "audio_segment_19_01m02s",
+      "content": "[01:02 - 01:03] [SPEAKER_3] Tak, proszę Pana, tylko dzwonię od rana"
+    },
+    {
+      "nr": 20,
+      "element_id": "audio_segment_20_01m03s",
+      "content": "[01:03 - 01:05] [SPEAKER_3] do Was i tam ciągle konsultant inny,"
+    },
+    {
+      "nr": 21,
+      "element_id": "audio_segment_21_01m05s",
+      "content": "[01:05 - 01:06] [SPEAKER_3] bo Was tam wiadomo, że jest dużo."
+    },
+    {
+      "nr": 22,
+      "element_id": "audio_segment_22_01m07s",
+      "content": "[01:07 - 01:09] [SPEAKER_3] Na tego samego konsultanta trafić nie można,"
+    },
+    {
+      "nr": 23,
+      "element_id": "audio_segment_23_01m09s",
+      "content": "[01:09 - 01:11] [SPEAKER_3] czyli nie można nie powtarzać tego,"
+    },
+    {
+      "nr": 24,
+      "element_id": "audio_segment_24_01m11s",
+      "content": "[01:11 - 01:13] [SPEAKER_3] jak małpa swojego tego samego,"
+    },
+    {
+      "nr": 25,
+      "element_id": "audio_segment_25_01m13s",
+      "content": "[01:13 - 01:15] [SPEAKER_3] proszę Pana, a jak usługa nie jest zlikwidowana,"
+    },
+    {
+      "nr": 26,
+      "element_id": "audio_segment_26_01m15s",
+      "content": "[01:15 - 01:17] [SPEAKER_3] z Waszej strony tak nie jest. Ja tego nie rozumiem."
+    },
+    {
+      "nr": 27,
+      "element_id": "audio_segment_27_01m18s",
+      "content": "[01:18 - 01:19] [SPEAKER_3] To znaczy,"
+    },
+    {
+      "nr": 28,
+      "element_id": "audio_segment_28_01m19s",
+      "content": "[01:19 - 01:21] [SPEAKER_3] proszę Pana, naszą usługę podłącza"
+    },
+    {
+      "nr": 29,
+      "element_id": "audio_segment_29_01m21s",
+      "content": "[01:21 - 01:22] [SPEAKER_3] telekomunikacja Polska."
+    },
+    {
+      "nr": 30,
+      "element_id": "audio_segment_30_01m22s",
+      "content": "[01:22 - 01:23] [SPEAKER_3] Proszę pana, oni powiedzieli, że wy."
+    },
+    {
+      "nr": 31,
+      "element_id": "audio_segment_31_01m24s",
+      "content": "[01:24 - 01:26] [SPEAKER_3] To może pan zadzwoni do nich i wy się kłóćcie, co?"
+    },
+    {
+      "nr": 32,
+      "element_id": "audio_segment_32_01m28s",
+      "content": "[01:28 - 01:29] [SPEAKER_4] Proszę pana, czy no tutaj"
+    },
+    {
+      "nr": 33,
+      "element_id": "audio_segment_33_01m29s",
+      "content": "[01:29 - 01:32] [SPEAKER_4] generalnie jest to podłączone na centrali"
+    },
+    {
+      "nr": 34,
+      "element_id": "audio_segment_34_01m32s",
+      "content": "[01:32 - 01:34] [SPEAKER_4] telekomunikacji polskiej. Proszę pana, niech mi pan"
+    },
+    {
+      "nr": 35,
+      "element_id": "audio_segment_35_01m34s",
+      "content": "[01:34 - 01:36] [SPEAKER_4] nie mówi, bo ja się na telekomunikacji nie znam, mam"
+    },
+    {
+      "nr": 36,
+      "element_id": "audio_segment_36_01m36s",
+      "content": "[01:36 - 01:38] [SPEAKER_4] zupełnie inną profesję, proszę pana,"
+    },
+    {
+      "nr": 37,
+      "element_id": "audio_segment_37_01m38s",
+      "content": "[01:38 - 01:40] [SPEAKER_4] i nie interesujemy to, gdzie jest to podłączone."
+    },
+    {
+      "nr": 38,
+      "element_id": "audio_segment_38_01m40s",
+      "content": "[01:40 - 01:42] [SPEAKER_4] Może w tyłek, nie wiem, trudno mi powiedzieć."
+    },
+    {
+      "nr": 39,
+      "element_id": "audio_segment_39_01m42s",
+      "content": "[01:42 - 01:44] [SPEAKER_4] Niech mi pan to rozłączy, bo ja nie chcę."
+    },
+    {
+      "nr": 40,
+      "element_id": "audio_segment_40_01m44s",
+      "content": "[01:44 - 01:45] [SPEAKER_4] Rozumiemy się? Oczywiście."
+    },
+    {
+      "nr": 41,
+      "element_id": "audio_segment_41_01m46s",
+      "content": "[01:46 - 01:48] [SPEAKER_4] Kiedy to będzie rozłączone? Proszę pana,"
+    },
+    {
+      "nr": 42,
+      "element_id": "audio_segment_42_01m48s",
+      "content": "[01:48 - 01:50] [SPEAKER_4] czy tutaj konkretnego terminu"
+    },
+    {
+      "nr": 43,
+      "element_id": "audio_segment_43_01m50s",
+      "content": "[01:50 - 01:52] [SPEAKER_4] panu podać nie mogę. Proszę pana,"
+    },
+    {
+      "nr": 44,
+      "element_id": "audio_segment_44_01m52s",
+      "content": "[01:52 - 01:53] [SPEAKER_4] A mnie interesuje konkretny termin."
+    },
+    {
+      "nr": 45,
+      "element_id": "audio_segment_45_01m54s",
+      "content": "[01:54 - 01:56] [SPEAKER_4] Bo za chwilę dzwonię do Faktów"
+    },
+    {
+      "nr": 46,
+      "element_id": "audio_segment_46_01m56s",
+      "content": "[01:56 - 01:58] [SPEAKER_4] albo do jakiejś innej gazety i napiszę."
+    },
+    {
+      "nr": 47,
+      "element_id": "audio_segment_47_01m58s",
+      "content": "[01:58 - 02:00] [SPEAKER_4] Co wy robicie z klientami? Właźcie?"
+    },
+    {
+      "nr": 48,
+      "element_id": "audio_segment_48_02m00s",
+      "content": "[02:00 - 02:02] [SPEAKER_4] Jeżeli weszliście i umowę, że się sfałszowali,"
+    },
+    {
+      "nr": 49,
+      "element_id": "audio_segment_49_02m02s",
+      "content": "[02:02 - 02:03] [SPEAKER_4] to będzie sprawa prokuratora?"
+    },
+    {
+      "nr": 50,
+      "element_id": "audio_segment_50_02m05s",
+      "content": "[02:05 - 02:06] [SPEAKER_5] Proszę pana, bo to tylko tak się nadaje do tego?"
+    },
+    {
+      "nr": 51,
+      "element_id": "audio_segment_51_02m07s",
+      "content": "[02:07 - 02:08] [SPEAKER_5] I naprawdę narobi gnoju."
+    },
+    {
+      "nr": 52,
+      "element_id": "audio_segment_52_02m11s",
+      "content": "[02:11 - 02:12] [SPEAKER_6] Halo?"
+    },
+    {
+      "nr": 53,
+      "element_id": "audio_segment_53_02m12s",
+      "content": "[02:12 - 02:14] [SPEAKER_6] Proszę pana, znaczy tego numeru telefonu"
+    },
+    {
+      "nr": 54,
+      "element_id": "audio_segment_54_02m14s",
+      "content": "[02:14 - 02:17] [SPEAKER_6] nie ma w naszej bazie danych, stąd na pewno..."
+    },
+    {
+      "nr": 55,
+      "element_id": "audio_segment_55_02m17s",
+      "content": "[02:17 - 02:18] [SPEAKER_6] Proszę pana, nie interesujemy."
+    },
+    {
+      "nr": 56,
+      "element_id": "audio_segment_56_02m18s",
+      "content": "[02:18 - 02:20] [SPEAKER_6] Ja nie mam przed sobą pana danych."
+    },
+    {
+      "nr": 57,
+      "element_id": "audio_segment_57_02m20s",
+      "content": "[02:20 - 02:25] [SPEAKER_6] Jeżeli wy coś chcecie ode mnie, to muszę przedstawić się 100 tysięcy razy"
+    },
+    {
+      "nr": 58,
+      "element_id": "audio_segment_58_02m25s",
+      "content": "[02:25 - 02:28] [SPEAKER_6] Powiedzieć numer buta, fiuta, długość i średnicę"
+    },
+    {
+      "nr": 59,
+      "element_id": "audio_segment_59_02m28s",
+      "content": "[02:28 - 02:29] [SPEAKER_6] Proszę pana, zanim wy mi coś powiecie"
+    },
+    {
+      "nr": 60,
+      "element_id": "audio_segment_60_02m29s",
+      "content": "[02:29 - 02:33] [SPEAKER_6] A ja tym bardziej nie mam do was dostępu do żadnych danych, proszę pana"
+    },
+    {
+      "nr": 61,
+      "element_id": "audio_segment_61_02m33s",
+      "content": "[02:33 - 02:36] [SPEAKER_6] Jakim prawem wy wchodzicie w posiadanie moich danych"
+    },
+    {
+      "nr": 62,
+      "element_id": "audio_segment_62_02m36s",
+      "content": "[02:36 - 02:38] [SPEAKER_6] I właścicie mi na mój telefon?"
+    },
+    {
+      "nr": 63,
+      "element_id": "audio_segment_63_02m40s",
+      "content": "[02:40 - 02:40] [SPEAKER_7] Jakim prawem?"
+    },
+    {
+      "nr": 64,
+      "element_id": "audio_segment_64_02m41s",
+      "content": "[02:41 - 02:42] [SPEAKER_7] Proszę pana, tak jak mówię"
+    },
+    {
+      "nr": 65,
+      "element_id": "audio_segment_65_02m42s",
+      "content": "[02:42 - 02:45] [SPEAKER_7] Ale nie interesuje mnie co pan mówi"
+    },
+    {
+      "nr": 66,
+      "element_id": "audio_segment_66_02m45s",
+      "content": "[02:45 - 02:50] [SPEAKER_7] I mnie interesuje, proszę pana, godzina wyłączenia waszej niesłusznie naliczonej usługi"
+    },
+    {
+      "nr": 67,
+      "element_id": "audio_segment_67_02m50s",
+      "content": "[02:50 - 02:54] [SPEAKER_7] bo za chwilę przyjdzie rachunek, że muszę wam zapłacić jeszcze za włączenie i wyłączenie, nie?"
+    },
+    {
+      "nr": 68,
+      "element_id": "audio_segment_68_02m55s",
+      "content": "[02:55 - 02:57] [SPEAKER_7] Bo takie debilizmy u nas istnieją w Polsce."
+    },
+    {
+      "nr": 69,
+      "element_id": "audio_segment_69_03m01s",
+      "content": "[03:01 - 03:03] [SPEAKER_8] Kiedy będzie to, proszę pana, wyłączone? O której godzinie, chcę wiedzieć."
+    },
+    {
+      "nr": 70,
+      "element_id": "audio_segment_70_03m04s",
+      "content": "[03:04 - 03:06] [SPEAKER_8] Proszę pana, niestety takich informacji..."
+    },
+    {
+      "nr": 71,
+      "element_id": "audio_segment_71_03m06s",
+      "content": "[03:06 - 03:09] [SPEAKER_8] To nie wie pan po oczy z kimś, kto będzie mógł taką informację udzielić."
+    },
+    {
+      "nr": 72,
+      "element_id": "audio_segment_72_03m10s",
+      "content": "[03:10 - 03:14] [SPEAKER_8] Proszę pana, tak jak mówię, jest to przez pomyłkę przez telekomunikację, nie powinni pana odezwać do tego."
+    },
+    {
+      "nr": 73,
+      "element_id": "audio_segment_73_03m14s",
+      "content": "[03:14 - 03:20] [SPEAKER_8] Oni powiedzieli przez pomyłkę u was, wy mówicie przez pomyłkę tam, a ja nie jestem chujem do bicia i do dzwonienia."
+    },
+    {
+      "nr": 74,
+      "element_id": "audio_segment_74_03m20s",
+      "content": "[03:20 - 03:23] [SPEAKER_8] I muszę zapłacić za tą rozmowę, co ja do pana dzwonię."
+    },
+    {
+      "nr": 75,
+      "element_id": "audio_segment_75_03m24s",
+      "content": "[03:24 - 03:25] [SPEAKER_8] Nie wiem, czy pan wie o tym."
+    },
+    {
+      "nr": 76,
+      "element_id": "audio_segment_76_03m25s",
+      "content": "[03:25 - 03:28] [SPEAKER_8] Może panu to nie robi różnicy. Mi tak."
+    },
+    {
+      "nr": 77,
+      "element_id": "audio_segment_77_03m30s",
+      "content": "[03:30 - 03:34] [SPEAKER_9] I ja muszę dzwonić do pana, żeby pan nie właził do mnie do domu. Rozumie pan to?"
+    },
+    {
+      "nr": 78,
+      "element_id": "audio_segment_78_03m36s",
+      "content": "[03:36 - 03:38] [SPEAKER_10] I jeszcze muszę się tłumaczyć. Komu?"
+    },
+    {
+      "nr": 79,
+      "element_id": "audio_segment_79_03m39s",
+      "content": "[03:39 - 03:40] [SPEAKER_10] Halo?"
+    },
+    {
+      "nr": 80,
+      "element_id": "audio_segment_80_03m40s",
+      "content": "[03:40 - 03:42] [SPEAKER_10] Proszę pana, tak jak mówię..."
+    },
+    {
+      "nr": 81,
+      "element_id": "audio_segment_81_03m42s",
+      "content": "[03:42 - 03:45] [SPEAKER_10] Ale ja, proszę pana, pańskie pierdoły mnie nie interesują."
+    },
+    {
+      "nr": 82,
+      "element_id": "audio_segment_82_03m45s",
+      "content": "[03:45 - 03:48] [SPEAKER_10] To mówi każdy z was, że się nauczyli jak małpy powtarzać."
+    },
+    {
+      "nr": 83,
+      "element_id": "audio_segment_83_03m48s",
+      "content": "[03:48 - 03:50] [SPEAKER_10] Proszę pana, wydało się, że to jest prawda."
+    },
+    {
+      "nr": 84,
+      "element_id": "audio_segment_84_03m50s",
+      "content": "[03:50 - 03:53] [SPEAKER_10] No, czy ja się nie przydał do tego, że pan jest małpą?"
+    },
+    {
+      "nr": 85,
+      "element_id": "audio_segment_85_03m55s",
+      "content": "[03:55 - 03:57] [SPEAKER_11] Ja chciałbym, żeby pan mnie do sądu oddał za obrazę."
+    },
+    {
+      "nr": 86,
+      "element_id": "audio_segment_86_03m57s",
+      "content": "[03:57 - 03:58] [SPEAKER_11] Czemu pan tego nie zrobi?"
+    },
+    {
+      "nr": 87,
+      "element_id": "audio_segment_87_04m01s",
+      "content": "[04:01 - 04:03] [SPEAKER_12] Proszę pana, zignoruję to, po prostu."
+    },
+    {
+      "nr": 88,
+      "element_id": "audio_segment_88_04m03s",
+      "content": "[04:03 - 04:05] [SPEAKER_12] No, a ja nie chcę, ja chcę, żeby pan mnie oddał do sądu."
+    },
+    {
+      "nr": 89,
+      "element_id": "audio_segment_89_04m05s",
+      "content": "[04:05 - 04:06] [SPEAKER_12] Czy pan to rozumie?"
+    },
+    {
+      "nr": 90,
+      "element_id": "audio_segment_90_04m07s",
+      "content": "[04:07 - 04:09] [SPEAKER_12] Czy mam panu bardziej naubliżać, żeby pan się wkurwił na mnie?"
+    },
+    {
+      "nr": 91,
+      "element_id": "audio_segment_91_04m10s",
+      "content": "[04:10 - 04:12] [SPEAKER_12] Musiałby się pan bardzo postarać."
+    },
+    {
+      "nr": 92,
+      "element_id": "audio_segment_92_04m12s",
+      "content": "[04:12 - 04:22] [SPEAKER_12] Aha. Boi się pan, bo myśmy się wszyscy pochowali jak szczury. Bo jakbym na sali sądowej dywnęł, a bym panu pizdął w łeb, to zębów by pan szukał przez 40 lat. I na pewno 6 lat bym pan założył."
+    },
+    {
+      "nr": 93,
+      "element_id": "audio_segment_93_04m23s",
+      "content": "[04:23 - 04:25] [SPEAKER_12] Proszę pana, nie byłbym taki pewny."
+    },
+    {
+      "nr": 94,
+      "element_id": "audio_segment_94_04m25s",
+      "content": "[04:25 - 04:29] [SPEAKER_12] No, a ja byłbym bardzo... Ja jestem pewien i jestem przekonany o tym, żeby tak było."
+    },
+    {
+      "nr": 95,
+      "element_id": "audio_segment_95_04m30s",
+      "content": "[04:30 - 04:31] [SPEAKER_12] Mógłby się pan bardzo zdziwić."
+    },
+    {
+      "nr": 96,
+      "element_id": "audio_segment_96_04m32s",
+      "content": "[04:32 - 04:35] [SPEAKER_12] No, nie wiem. Chyba, że pan ma 2,50."
+    },
+    {
+      "nr": 97,
+      "element_id": "audio_segment_97_04m35s",
+      "content": "[04:35 - 04:39] [SPEAKER_12] Więc się pytam proszę pana"
+    },
+    {
+      "nr": 98,
+      "element_id": "audio_segment_98_04m39s",
+      "content": "[04:39 - 04:41] [SPEAKER_12] Albo odpowie pan kiedy pan to wyłączy"
+    },
+    {
+      "nr": 99,
+      "element_id": "audio_segment_99_04m41s",
+      "content": "[04:41 - 04:44] [SPEAKER_12] Albo proszę mnie połączyć z osobą kompetentną"
+    },
+    {
+      "nr": 100,
+      "element_id": "audio_segment_100_04m44s",
+      "content": "[04:44 - 04:45] [SPEAKER_12] Nie taką jak pan"
+    },
+    {
+      "nr": 101,
+      "element_id": "audio_segment_101_04m45s",
+      "content": "[04:45 - 04:46] [SPEAKER_12] Skoro pan nic nie może"
+    },
+    {
+      "nr": 102,
+      "element_id": "audio_segment_102_04m46s",
+      "content": "[04:46 - 04:48] [SPEAKER_12] To z osobą niekompetentną nie chcę rozmawiać"
+    },
+    {
+      "nr": 103,
+      "element_id": "audio_segment_103_04m48s",
+      "content": "[04:48 - 04:50] [SPEAKER_12] I proszę mnie połączyć z kompetentną"
+    },
+    {
+      "nr": 104,
+      "element_id": "audio_segment_104_04m50s",
+      "content": "[04:50 - 04:51] [SPEAKER_12] Osobą która mi odpowie na to"
+    },
+    {
+      "nr": 105,
+      "element_id": "audio_segment_105_04m51s",
+      "content": "[04:51 - 04:53] [SPEAKER_12] Kiedy to będzie wyłączone"
+    },
+    {
+      "nr": 106,
+      "element_id": "audio_segment_106_04m53s",
+      "content": "[04:53 - 04:55] [SPEAKER_12] Bo ci się wtarnęli do mojego domu jak świnie"
+    },
+    {
+      "nr": 107,
+      "element_id": "audio_segment_107_04m55s",
+      "content": "[04:55 - 04:59] [SPEAKER_12] Rozumie pan to teraz?"
+    },
+    {
+      "nr": 108,
+      "element_id": "audio_segment_108_05m00s",
+      "content": "[05:00 - 05:01] [SPEAKER_12] Proszę pana"
+    },
+    {
+      "nr": 109,
+      "element_id": "audio_segment_109_05m01s",
+      "content": "[05:01 - 05:02] [SPEAKER_12] Tak jak panu wcześniej"
+    },
+    {
+      "nr": 110,
+      "element_id": "audio_segment_110_05m02s",
+      "content": "[05:02 - 05:04] [SPEAKER_12] Nie chcę wcześniejszych pana rozmów"
+    },
+    {
+      "nr": 111,
+      "element_id": "audio_segment_111_05m04s",
+      "content": "[05:04 - 05:07] [SPEAKER_12] Ja chcę albo z panem rozmawiać i jest pan osobą kompetentą,"
+    },
+    {
+      "nr": 112,
+      "element_id": "audio_segment_112_05m07s",
+      "content": "[05:07 - 05:09] [SPEAKER_12] która ma mi odpowiedzieć na konkretne pytania,"
+    },
+    {
+      "nr": 113,
+      "element_id": "audio_segment_113_05m09s",
+      "content": "[05:09 - 05:11] [SPEAKER_12] albo niech pan się wyłączy, niech pan mnie połączy z kim innym."
+    },
+    {
+      "nr": 114,
+      "element_id": "audio_segment_114_05m12s",
+      "content": "[05:12 - 05:13] [SPEAKER_12] Jeżeli pan nie ma nic do powiedzenia."
+    },
+    {
+      "nr": 115,
+      "element_id": "audio_segment_115_05m14s",
+      "content": "[05:14 - 05:17] [SPEAKER_12] Proszę pana, nawet gdyby pan rozmawiał z dyrektorem generalnym Tele2,"
+    },
+    {
+      "nr": 116,
+      "element_id": "audio_segment_116_05m17s",
+      "content": "[05:17 - 05:20] [SPEAKER_12] ta usługa nie będzie odłączona, ponieważ nie my ją przez pomyłkę podłączyliśmy."
+    },
+    {
+      "nr": 117,
+      "element_id": "audio_segment_117_05m21s",
+      "content": "[05:21 - 05:24] [SPEAKER_12] Panie, a w telekomunikacji mówią, że nie my, oni tylko wy."
+    },
+    {
+      "nr": 118,
+      "element_id": "audio_segment_118_05m24s",
+      "content": "[05:24 - 05:25] [SPEAKER_12] To ja się pytam, to kurwa kto?"
+    },
+    {
+      "nr": 119,
+      "element_id": "audio_segment_119_05m25s",
+      "content": "[05:25 - 05:30] [SPEAKER_12] To ja mam dzwonić od rana i siedzieć i przechamaczać się z wami?"
+    },
+    {
+      "nr": 120,
+      "element_id": "audio_segment_120_05m34s",
+      "content": "[05:34 - 05:36] [SPEAKER_13] Kto się pomylił, ja czy wy?"
+    },
+    {
+      "nr": 121,
+      "element_id": "audio_segment_121_05m36s",
+      "content": "[05:36 - 05:40] [SPEAKER_13] Proszę pana, pomyłkę zostało, to podłączone telek..."
+    },
+    {
+      "nr": 122,
+      "element_id": "audio_segment_122_05m40s",
+      "content": "[05:40 - 05:43] [SPEAKER_13] No to więc się pytam, kiedy mi to wyłączycie, bo wy na końcu rachunek przyślecie do zapłacenia."
+    },
+    {
+      "nr": 123,
+      "element_id": "audio_segment_123_05m43s",
+      "content": "[05:43 - 05:45] [SPEAKER_13] Wy się są bandą idiotów."
+    },
+    {
+      "nr": 124,
+      "element_id": "audio_segment_124_05m45s",
+      "content": "[05:45 - 05:51] [SPEAKER_13] Facet kurwa w gazecie czy tam rachunki płaci, musi płacić za telefonu, który nie miał nigdy i nie ma."
+    },
+    {
+      "nr": 125,
+      "element_id": "audio_segment_125_05m52s",
+      "content": "[05:52 - 05:54] [SPEAKER_13] I czego się można po was spodziewać?"
+    },
+    {
+      "nr": 126,
+      "element_id": "audio_segment_126_05m58s",
+      "content": "[05:58 - 06:00] [SPEAKER_14] Jeszcze raz pan powtarzam i zadaję panu pytanie."
+    },
+    {
+      "nr": 127,
+      "element_id": "audio_segment_127_06m00s",
+      "content": "[06:00 - 06:07] [SPEAKER_14] Panie, kiedy to będzie wyłączone, a jeżeli Pan jest, nic nie ma do powiedzenia, tylko jest odprzątania tych Pani oczy, o tych, co mają coś do powiedzenia."
+    },
+    {
+      "nr": 128,
+      "element_id": "audio_segment_128_06m08s",
+      "content": "[06:08 - 06:09] [SPEAKER_14] I życzę, że to są takie rozmowy."
+    },
+    {
+      "nr": 129,
+      "element_id": "audio_segment_129_06m10s",
+      "content": "[06:10 - 06:12] [SPEAKER_14] A nie, że tam Pan, bla, bla, bla, bla, bla, bla."
+    },
+    {
+      "nr": 130,
+      "element_id": "audio_segment_130_06m13s",
+      "content": "[06:13 - 06:14] [SPEAKER_14] Może to jest nagrana taśmą i powtarzacie."
+    },
+    {
+      "nr": 131,
+      "element_id": "audio_segment_131_06m17s",
+      "content": "[06:17 - 06:17] [SPEAKER_15] Słucham."
+    },
+    {
+      "nr": 132,
+      "element_id": "audio_segment_132_06m18s",
+      "content": "[06:18 - 06:22] [SPEAKER_15] Proszę Pana, zostało to podłączone przez pomyłkę, przez telekomunikację Polską."
+    },
+    {
+      "nr": 133,
+      "element_id": "audio_segment_133_06m22s",
+      "content": "[06:22 - 06:25] [SPEAKER_15] No przecież nie na pewno przeze mnie zostało to podłączone."
+    },
+    {
+      "nr": 134,
+      "element_id": "audio_segment_134_06m25s",
+      "content": "[06:25 - 06:29] [SPEAKER_15] I życzę, że to rozłączy. Tylko się pytam, kiedy to będzie rozłączone, bo ja chcę korzystać z telefonu."
+    },
+    {
+      "nr": 135,
+      "element_id": "audio_segment_135_06m29s",
+      "content": "[06:29 - 06:31] [SPEAKER_15] Rozumie Pan to?"
+    },
+    {
+      "nr": 136,
+      "element_id": "audio_segment_136_06m31s",
+      "content": "[06:31 - 06:33] [SPEAKER_15] Czy ja tego nie rozumie?"
+    },
+    {
+      "nr": 137,
+      "element_id": "audio_segment_137_06m35s",
+      "content": "[06:35 - 06:41] [SPEAKER_16] Proszę Pana, jeżeli Pan umowy z nami nie podpisywał, nie mamy podstawy do nawiązania współpracy."
+    },
+    {
+      "nr": 138,
+      "element_id": "audio_segment_138_06m41s",
+      "content": "[06:41 - 06:42] [SPEAKER_16] A zostało to..."
+    },
+    {
+      "nr": 139,
+      "element_id": "audio_segment_139_06m42s",
+      "content": "[06:42 - 06:45] [SPEAKER_16] To więc wjazd tak cholera dobrze, że Pan to rozumie! Ja też to rozumiem!"
+    },
+    {
+      "nr": 140,
+      "element_id": "audio_segment_140_06m45s",
+      "content": "[06:45 - 06:47] [SPEAKER_16] Tylko nie rozumiem, dlaczego mi głazicie?"
+    },
+    {
+      "nr": 141,
+      "element_id": "audio_segment_141_06m47s",
+      "content": "[06:47 - 06:50] [SPEAKER_16] A może ktoś sfałszował jakąś umowę?"
+    },
+    {
+      "nr": 142,
+      "element_id": "audio_segment_142_06m50s",
+      "content": "[06:50 - 06:52] [SPEAKER_16] Bo sfałszewym w Warszawie nie brakuje!"
+    },
+    {
+      "nr": 143,
+      "element_id": "audio_segment_143_06m52s",
+      "content": "[06:52 - 06:55] [SPEAKER_16] Sama hołota tam siedzi! I bandziory, i złodzieje!"
+    },
+    {
+      "nr": 144,
+      "element_id": "audio_segment_144_06m59s",
+      "content": "[06:59 - 07:01] [SPEAKER_17] No i co, zamknął się pan?"
+    },
+    {
+      "nr": 145,
+      "element_id": "audio_segment_145_07m01s",
+      "content": "[07:01 - 07:05] [SPEAKER_17] Proszę pana, takie pomyłki można popełnić telekomunikacją."
+    },
+    {
+      "nr": 146,
+      "element_id": "audio_segment_146_07m05s",
+      "content": "[07:05 - 07:07] [SPEAKER_17] Proszę pana, pomyłki to wy popełniacie wyrzeź..."
+    },
+    {
+      "nr": 147,
+      "element_id": "audio_segment_147_07m07s",
+      "content": "[07:07 - 07:09] [SPEAKER_17] Warszawiak już się pomylił jak się urodził,"
+    },
+    {
+      "nr": 148,
+      "element_id": "audio_segment_148_07m09s",
+      "content": "[07:09 - 07:12] [SPEAKER_17] a Hitler o was zapomniał, kurwa, bo ja o was wszystkich,"
+    },
+    {
+      "nr": 149,
+      "element_id": "audio_segment_149_07m12s",
+      "content": "[07:12 - 07:14] [SPEAKER_17] Warszawiaków, przez oświęcim przepuścił."
+    },
+    {
+      "nr": 150,
+      "element_id": "audio_segment_150_07m14s",
+      "content": "[07:14 - 07:17] [SPEAKER_17] Banda, kuresztwa, złodziejstwa i nic więcej."
+    },
+    {
+      "nr": 151,
+      "element_id": "audio_segment_151_07m17s",
+      "content": "[07:17 - 07:21] [SPEAKER_17] I ode mnie pan do sądu, wtedy będę mógł panu przypierdolić, bo tak nie widzę pana."
+    },
+    {
+      "nr": 152,
+      "element_id": "audio_segment_152_07m21s",
+      "content": "[07:21 - 07:25] [SPEAKER_17] I przekona się pan o tym, czy jest mocniejszy, czy słabszy."
+    },
+    {
+      "nr": 153,
+      "element_id": "audio_segment_153_07m25s",
+      "content": "[07:25 - 07:30] [SPEAKER_17] Rozumie pan, czy pan znowu nie słyszy?"
+    },
+    {
+      "nr": 154,
+      "element_id": "audio_segment_154_07m31s",
+      "content": "[07:31 - 07:36] [SPEAKER_17] Proszę pana, rozumiem pana, niemniej nie my to podłączyliśmy i nie my to możemy odłączyć"
+    },
+    {
+      "nr": 155,
+      "element_id": "audio_segment_155_07m36s",
+      "content": "[07:36 - 07:37] [SPEAKER_17] To ja mam to odłączyć?"
+    },
+    {
+      "nr": 156,
+      "element_id": "audio_segment_156_07m40s",
+      "content": "[07:40 - 07:41] [SPEAKER_18] To i pan powie gdzie?"
+    },
+    {
+      "nr": 157,
+      "element_id": "audio_segment_157_07m42s",
+      "content": "[07:42 - 07:45] [SPEAKER_18] Proszę pana, telekomunikacja polska tutaj podłącza..."
+    },
+    {
+      "nr": 158,
+      "element_id": "audio_segment_158_07m45s",
+      "content": "[07:45 - 07:52] [SPEAKER_18] To niech pan zadzwoni do nich i powie, że klient się wkurwia i życzy sobie pan odłączyć, bo pan tego też nie żądał, żeby włączali"
+    },
+    {
+      "nr": 159,
+      "element_id": "audio_segment_159_07m52s",
+      "content": "[07:52 - 07:55] [SPEAKER_18] Rozumie pan to? Czy to jest za trudne dla pana?"
+    },
+    {
+      "nr": 160,
+      "element_id": "audio_segment_160_07m56s",
+      "content": "[07:56 - 07:57] [SPEAKER_18] Rozumiem, proszę pana."
+    },
+    {
+      "nr": 161,
+      "element_id": "audio_segment_161_07m57s",
+      "content": "[07:57 - 07:59] [SPEAKER_18] To kiedy będzie to wyłączone, kiedy pan to zobaczy?"
+    },
+    {
+      "nr": 162,
+      "element_id": "audio_segment_162_08m01s",
+      "content": "[08:01 - 08:02] [SPEAKER_19] Nazwisko pańskie mam."
+    },
+    {
+      "nr": 163,
+      "element_id": "audio_segment_163_08m02s",
+      "content": "[08:02 - 08:06] [SPEAKER_19] Proszę pana, taka informacja będzie przekazana, a kiedy oni to odłączą..."
+    },
+    {
+      "nr": 164,
+      "element_id": "audio_segment_164_08m06s",
+      "content": "[08:06 - 08:09] [SPEAKER_19] Proszę pana, nie interesuje mnie, że kiedy..."
+    },
+    {
+      "nr": 165,
+      "element_id": "audio_segment_165_08m09s",
+      "content": "[08:09 - 08:12] [SPEAKER_19] Bo może za trzy tygodnie, nie? Ja przez trzy tygodnie nie będę mógł z telefonu korzystać."
+    },
+    {
+      "nr": 166,
+      "element_id": "audio_segment_166_08m15s",
+      "content": "[08:15 - 08:17] [SPEAKER_20] To my, że się mi zablokowali telefona trzy tygodnie?"
+    },
+    {
+      "nr": 167,
+      "element_id": "audio_segment_167_08m19s",
+      "content": "[08:19 - 08:23] [SPEAKER_21] Proszę pana, już za pracowników telekomunikacji polskiej odpowiadać nie będę."
+    },
+    {
+      "nr": 168,
+      "element_id": "audio_segment_168_08m23s",
+      "content": "[08:23 - 08:26] [SPEAKER_21] To niech pan odpowiada za siebie, niech pan mnie odda do sądu"
+    },
+    {
+      "nr": 169,
+      "element_id": "audio_segment_169_08m26s",
+      "content": "[08:26 - 08:27] [SPEAKER_21] Proszę, błagam pana"
+    },
+    {
+      "nr": 170,
+      "element_id": "audio_segment_170_08m27s",
+      "content": "[08:27 - 08:32] [SPEAKER_21] Chuluzo jebany, no oddaj mnie do sądu"
+    },
+    {
+      "nr": 171,
+      "element_id": "audio_segment_171_08m32s",
+      "content": "[08:32 - 08:37] [SPEAKER_21] I zobaczymy, czy jest najmocniejszy, czy nie"
+    },
+    {
+      "nr": 172,
+      "element_id": "audio_segment_172_08m37s",
+      "content": "[08:37 - 08:38] [SPEAKER_21] Czy tylko w gębie"
+    },
+    {
+      "nr": 173,
+      "element_id": "audio_segment_173_08m38s",
+      "content": "[08:38 - 08:43] [SPEAKER_21] Cisza"
+    },
+    {
+      "nr": 174,
+      "element_id": "audio_segment_174_08m43s",
+      "content": "[08:43 - 08:48] [SPEAKER_21] No odezwij się, chłopie"
+    },
+    {
+      "nr": 175,
+      "element_id": "audio_segment_175_08m48s",
+      "content": "[08:48 - 08:50] [SPEAKER_21] Czy wystrałeś się strachu od pory?"
+    },
+    {
+      "nr": 176,
+      "element_id": "audio_segment_176_08m50s",
+      "content": "[08:50 - 08:54] [SPEAKER_21] Proszę pana, ja już pana poinformowałem co w tej sytuacji należy zrobić."
+    },
+    {
+      "nr": 177,
+      "element_id": "audio_segment_177_08m54s",
+      "content": "[08:54 - 08:56] [SPEAKER_21] Pan nie może w dupę pocałować proszę pana!"
+    },
+    {
+      "nr": 178,
+      "element_id": "audio_segment_178_08m56s",
+      "content": "[08:56 - 08:59] [SPEAKER_21] Pod warunkiem, że sobie mordę wymyje!"
+    },
+    {
+      "nr": 179,
+      "element_id": "audio_segment_179_08m59s",
+      "content": "[08:59 - 09:01] [SPEAKER_21] Proszę pana, na pieszczotę to trzeba sobie zasłużyć."
+    },
+    {
+      "nr": 180,
+      "element_id": "audio_segment_180_09m01s",
+      "content": "[09:01 - 09:05] [SPEAKER_21] No z takim pedałem jak ty chujo na pewno ci nie będę pieścił, nie?"
+    },
+    {
+      "nr": 181,
+      "element_id": "audio_segment_181_09m05s",
+      "content": "[09:05 - 09:07] [SPEAKER_21] Tylko ci mówię, że ci mordę mogę wybić!"
+    },
+    {
+      "nr": 182,
+      "element_id": "audio_segment_182_09m07s",
+      "content": "[09:07 - 09:08] [SPEAKER_21] Zęby chuju!"
+    },
+    {
+      "nr": 183,
+      "element_id": "audio_segment_183_09m08s",
+      "content": "[09:08 - 09:10] [SPEAKER_21] Odejmij od stodu, nagraj to!"
+    },
+    {
+      "nr": 184,
+      "element_id": "audio_segment_184_09m12s",
+      "content": "[09:12 - 09:13] [SPEAKER_22] Czemu tego nie zrobisz?"
+    },
+    {
+      "nr": 185,
+      "element_id": "audio_segment_185_09m13s",
+      "content": "[09:13 - 09:15] [SPEAKER_22] W porach masz zasrane ze strachu?"
+    },
+    {
+      "nr": 186,
+      "element_id": "audio_segment_186_09m16s",
+      "content": "[09:16 - 09:18] [SPEAKER_22] Kuta się jeden zajebany?"
+    },
+    {
+      "nr": 187,
+      "element_id": "audio_segment_187_09m20s",
+      "content": "[09:20 - 09:50] [SPEAKER_23] KURWA BEDLAK ZAJEBANY"
+    },
+    {
+      "nr": 188,
+      "element_id": "audio_segment_188_09m50s",
+      "content": "[09:50 - 09:51] [SPEAKER_23] Dziękuję."
+    }
+  ]
+}

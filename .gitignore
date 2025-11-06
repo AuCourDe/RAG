@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv_rag/
+venv/
+env/
+ENV/
+
+# Bazy danych (zawierają pełne teksty dokumentów)
+vector_db/
+vector_db_public/
+vector_db_private/
+
+# Dane użytkownika (dokumenty)
+data/*.pdf
+data/*.docx
+data/*.xlsx
+data/*.jpg
+data/*.jpeg
+data/*.png
+data/*.bmp
+
+# Zachowaj strukturę folderu data ale bez plików
+!data/.gitkeep
+
+# Logi
+*.log
+nohup.out
+
+# Pliki tymczasowe
+temp/
+tmp/
+*.tmp
+
+# Pliki konfiguracyjne z hasłami
+auth_config.json
+
+# Pliki wygenerowane
+image_descriptions.json
+suggested_questions.json
+audit_log.jsonl
+web_search_cache.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Pliki systemowe
+.cache/
+
+# Nie ignoruj tych plików dokumentacji
+!README.md
+!requirements.txt
+!*.md
+!*.sh
+!*.py
+
