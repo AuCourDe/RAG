@@ -94,11 +94,17 @@ BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
 VECTOR_DB_DIR = BASE_DIR / "vector_db"
 TEMP_DIR = BASE_DIR / "temp"
+MODELS_DIR = BASE_DIR / "models"
+WHISPER_MODELS_DIR = MODELS_DIR / "whisper"
+EMBEDDING_MODELS_DIR = MODELS_DIR / "embeddings"
+RERANKER_MODELS_DIR = MODELS_DIR / "reranker"
 
 # Tworzenie katalogów jeśli nie istnieją
 DATA_DIR.mkdir(exist_ok=True)
 VECTOR_DB_DIR.mkdir(exist_ok=True)
 TEMP_DIR.mkdir(exist_ok=True)
+for directory in [MODELS_DIR, WHISPER_MODELS_DIR, EMBEDDING_MODELS_DIR, RERANKER_MODELS_DIR]:
+    directory.mkdir(parents=True, exist_ok=True)
 
 # Konfiguracja modeli
 VISION_MODEL = "gemma3:12b"  # Model multimodalny do opisu grafik
@@ -491,21 +497,20 @@ class DocumentProcessor:
             logger.info(f"Plik: {file_path.name}")
             
             # Sprawdź czy model jest już pobrany
-            import os
-            whisper_cache = os.path.expanduser("~/.cache/whisper")
-            model_file = os.path.join(whisper_cache, "large-v3.pt")
-            
-            if not os.path.exists(model_file):
+            model_file = WHISPER_MODELS_DIR / "large-v3.pt"
+
+            if not model_file.exists():
                 logger.info("[WARNING] MODEL WHISPER NIE JEST POBRANY!")
                 logger.info("[DOWNLOAD] Rozpoczynam pobieranie modelu Whisper large-v3 (~3 GB)...")
                 logger.info("[INFO] To może potrwać 5-15 minut przy pierwszym użyciu...")
+                logger.info(f"[INFO] Model zostanie zapisany w: {model_file.parent}")
                 logger.info("[INFO] Kolejne pliki audio będą przetwarzane szybciej (model w cache)")
             else:
-                logger.info("[OK] Model Whisper large-v3 znaleziony w cache")
-            
+                logger.info(f"[OK] Model Whisper large-v3 znaleziony w {model_file.parent}")
+
             logger.info("[LOADING] Ładowanie modelu Whisper large-v3...")
             load_start = time.time()
-            model = whisper.load_model("large-v3")
+            model = whisper.load_model("large-v3", download_root=str(WHISPER_MODELS_DIR))
             load_time = time.time() - load_start
             logger.info(f"[OK] Model Whisper załadowany w {load_time:.2f} sekund")
             
@@ -967,7 +972,11 @@ class EmbeddingProcessor:
         start_time = time.time()
         
         # Inicjalizacja modelu do tworzenia embeddingów
-        self.model = SentenceTransformer('intfloat/multilingual-e5-large', device=device)
+        self.model = SentenceTransformer(
+            'intfloat/multilingual-e5-large',
+            device=device,
+            cache_folder=str(EMBEDDING_MODELS_DIR)
+        )
         
         loading_time = time.time() - start_time
         logger.info(f"Załadowano model embeddingów w {loading_time:.2f} sekund")
@@ -1093,7 +1102,10 @@ class VectorDatabase:
         try:
             # Utworzenie embeddingu dla zapytania
             logger.debug("Tworzenie embeddingu dla zapytania...")
-            model = SentenceTransformer('intfloat/multilingual-e5-large')
+            model = SentenceTransformer(
+                'intfloat/multilingual-e5-large',
+                cache_folder=str(EMBEDDING_MODELS_DIR)
+            )
             query_embedding = model.encode([query]).tolist()
             
             # Wyszukiwanie

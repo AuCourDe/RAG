@@ -18,6 +18,11 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODELS_DIR = BASE_DIR / "models"
+RERANKER_MODELS_DIR = MODELS_DIR / "reranker"
+RERANKER_MODELS_DIR.mkdir(parents=True, exist_ok=True)
+
 # Lazy imports - nie ładuj jeśli nie używasz
 _bm25_available = False
 _reranker_available = False
@@ -189,11 +194,19 @@ class Reranker:
         logger.info(f"Ładowanie reranker model: {model_name}")
         
         try:
-            self.model = CrossEncoder(model_name, device=device)
+            self.model = CrossEncoder(
+                model_name,
+                device=device,
+                cache_folder=str(RERANKER_MODELS_DIR)
+            )
             logger.info(f"Reranker załadowany na {device}")
         except Exception as e:
             logger.warning(f"Nie można załadować na {device}, próbuję CPU: {e}")
-            self.model = CrossEncoder(model_name, device='cpu')
+            self.model = CrossEncoder(
+                model_name,
+                device='cpu',
+                cache_folder=str(RERANKER_MODELS_DIR)
+            )
             logger.info("Reranker załadowany na CPU")
     
     def rerank(self, query: str, documents: List[Dict[str, Any]], top_k: int = 10) -> List[Dict[str, Any]]:

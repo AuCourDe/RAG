@@ -11,7 +11,7 @@
 ### 2. Kod Python (app/)
 - ✅ Brak hardcoded paths /home/rev/projects/RAG2
 - ✅ Używa Path(__file__).parent dla ścieżek relatywnych
-- ✅ Cache modeli: ~/.cache/ (standard dla każdego usera)
+- ✅ Modele pobierane do ./models/ (wspólny katalog w projekcie)
 
 ### 3. Zależności
 - ✅ requirements.txt - kompletny z wersjami
@@ -22,8 +22,8 @@
 - ✅ Bazy danych: relative paths (vector_db/, data/)
 
 ### 5. Modele AI
-- ⚠️  Whisper: ~/.cache/whisper/ (auto-download)
-- ⚠️  Embeddings: ~/.cache/huggingface/ (auto-download)
+- ✅ Whisper: ./models/whisper/ (auto-download)
+- ✅ Embeddings: ./models/embeddings/ (auto-download)
 - ⚠️  Ollama: ~/.ollama/models/ (wymaga instalacji ollama)
 
 ### 6. Wymagania systemu

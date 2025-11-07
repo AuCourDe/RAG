@@ -19,6 +19,15 @@ import subprocess
 import requests
 import uuid
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+MODELS_DIR = PROJECT_ROOT / "models"
+WHISPER_MODELS_DIR = MODELS_DIR / "whisper"
+EMBEDDINGS_MODELS_DIR = MODELS_DIR / "embeddings"
+RERANKER_MODELS_DIR = MODELS_DIR / "reranker"
+
+for path in [MODELS_DIR, WHISPER_MODELS_DIR, EMBEDDINGS_MODELS_DIR, RERANKER_MODELS_DIR]:
+    path.mkdir(parents=True, exist_ok=True)
+
 # Konfiguracja strony
 st.set_page_config(
     page_title="RAG System",
@@ -930,14 +939,17 @@ def main():
                     st.markdown("**Sprawdź postęp:** `tail -f file_watcher.log`")
                 
                 if audio_files:
-                    whisper_cache = os.path.expanduser("~/.cache/whisper")
-                    model_file = os.path.join(whisper_cache, "base.pt")
-                    
-                    if not os.path.exists(model_file):
+                    model_file = WHISPER_MODELS_DIR / "base.pt"
+                    if not model_file.exists():
                         st.warning("Wykryto pliki audio")
-                        st.info("Model Whisper zostanie pobrany przy pierwszym użyciu (~145 MB, ~1-2 minuty)")
+                        st.info(
+                            "Model Whisper zostanie pobrany przy pierwszym użyciu (~145 MB, ~1-2 minuty) "
+                            f"i zapisany w {WHISPER_MODELS_DIR}"
+                        )
                     else:
-                        st.info(f"Wykryto {len(audio_files)} plik(ów) audio. Czas przetwarzania: ~3 min na każde 5 min nagrania")
+                        st.info(
+                            f"Wykryto {len(audio_files)} plik(ów) audio. Czas przetwarzania: ~3 min na każde 5 min nagrania"
+                        )
                 
                 if st.button("Zapisz pliki", use_container_width=True, type="primary"):
                     data_dir = Path("data")
@@ -1397,11 +1409,10 @@ def main():
             'large-v3': 'Large v3 (3 GB) - najdokładniejszy'
         }
         
-        whisper_cache = os.path.expanduser("~/.cache/whisper")
         available_models = []
         for model_name in whisper_models.keys():
-            model_file = os.path.join(whisper_cache, f"{model_name}.pt")
-            if os.path.exists(model_file):
+            model_file = WHISPER_MODELS_DIR / f"{model_name}.pt"
+            if model_file.exists():
                 available_models.append(model_name)
         
         if available_models:
@@ -1503,12 +1514,11 @@ def main():
         
         st.subheader("Modele audio (Whisper)")
         
-        whisper_cache = os.path.expanduser("~/.cache/whisper")
         models_status = {}
         
         for model_name, size in [("tiny", "75 MB"), ("base", "145 MB"), ("small", "470 MB"), ("medium", "1.5 GB"), ("large-v3", "3 GB")]:
-            model_file = os.path.join(whisper_cache, f"{model_name}.pt")
-            models_status[model_name] = os.path.exists(model_file)
+            model_file = WHISPER_MODELS_DIR / f"{model_name}.pt"
+            models_status[model_name] = model_file.exists()
         
         st.markdown("**Status modeli Whisper:**")
         
@@ -1539,7 +1549,7 @@ def main():
             st.info("Model 'base' zostanie pobrany przy pierwszym pliku audio (~145 MB)")
         
         st.caption("Modele pobierają się automatycznie przy pierwszym użyciu pliku audio")
-        st.caption("Lokalizacja: ~/.cache/whisper/")
+        st.caption(f"Lokalizacja: {WHISPER_MODELS_DIR}")
 
 if __name__ == "__main__":
     main()

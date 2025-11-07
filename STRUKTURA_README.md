@@ -97,15 +97,16 @@ RAG2/
 
 ## 🔄 Migracja cache modeli
 
-### Modele są teraz w:
-- **Whisper:** `~/.cache/whisper/` → symlink w `models/whisper/`
-- **Embeddings:** `~/.cache/huggingface/` → symlink w `models/embeddings/`
+### Modele są teraz w katalogu projektu:
+- **Whisper:** `models/whisper/`
+- **Embeddings:** `models/embeddings/`
+- **Reranker:** `models/reranker/`
 - **Ollama:** `~/.ollama/models/` (osobny serwis, nie w projekcie)
 
-### Dlaczego symlinki?
-- Nie duplikujemy wielkich modeli (Whisper large-v3 = 3 GB)
-- Modele są współdzielone między projektami
-- Łatwe zarządzanie cache
+### Dlaczego lokalny katalog?
+- Modele są wersjonowane razem z projektem (łatwiejsza migracja)
+- Nie ma ukrytych zależności w `~/.cache/`
+- Prościej tworzyć backup oraz kopie na inne maszyny
 
 ---
 

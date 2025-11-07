@@ -229,7 +229,7 @@
 - **Large v3** (3 GB) - najdokładniejszy, profesjonalny
 
 **Info o stanie modelu:**
-- Wykrywanie czy model jest pobrany (~/.cache/whisper/)
+- Wykrywanie czy model jest pobrany (models/whisper/)
 - Informacja: "✅ Pobrany" / "⚠️ Wymaga pobrania"
 - Size info dla każdego modelu
 

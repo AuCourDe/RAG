@@ -357,7 +357,7 @@ Fragment [2] (02:45-03:00) dodaje...
 
 **Whisper (pobierany automatycznie przy pierwszym użyciu):**
 ```
-~/.cache/whisper/
+models/whisper/
 ├── tiny.pt     (75 MB)
 ├── base.pt     (145 MB)  ← Domyślny
 ├── small.pt    (470 MB)

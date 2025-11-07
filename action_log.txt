@@ -2910,7 +2910,7 @@ DOKUMENTACJA:
 - README.md (386 linii) ← zaktualizowany v4.0
 - PLAN_ROZWOJU.md (1500 linii) ← NOWY
 - WORKFLOW_I_SKALOWANIE.md (2084 linie)
-- AUDIO_INSTRUKCJA.md (150 linii)
+- AUDIO_INSTRUKCJA.md (584 linie)
 - VIDEO_WORKFLOW.md (180 linii)
 - OBRAZY_W_DOKUMENTACH.md (75 linii)
 - action_log.txt (2860+ linii)
@@ -4711,5 +4711,61 @@ Gotowe do:
 ✅ Użycia produkcyjnego
 
 STATUS: ✅ v7 PUSHED SUCCESSFULLY
+
+================================================================================
+
+================================================================================
+Data: 2025-11-07 15:46
+Działanie: Instrukcja migracji modeli na nową maszynę
+================================================================================
+
+WYKONANE AKCJE:
+1. Sprawdzono strukturę katalogu `models/` oraz aktualne symlinki do cache modeli.
+2. Zweryfikowano lokalizacje cache dla Whisper (`~/.cache/whisper`) i HuggingFace (`~/.cache/huggingface`).
+3. Przygotowano zestaw komend do pobrania modeli (Whisper, SentenceTransformer, CrossEncoder) na świeżej instalacji.
+4. Opracowano komendy do utworzenia symlinków w `/mnt/data/RAG/models/` oraz przypomniano o `ollama pull`.
+
+WYNIK: ✅ Kod działa optymalnie (dostarczono instrukcje migracji, bez zmian w repozytorium)
+
+UWAGI:
+- Modele pobierają się automatycznie przy pierwszym uruchomieniu; komendy pozwalają zrobić to z wyprzedzeniem.
+- Symlinki można odtworzyć komendami `ln -sfn` po pobraniu modeli.
+- Modele Ollama pozostają w `~/.ollama/models/` i wymagają `ollama pull` na nowej maszynie.
+
+================================================================================
+
+================================================================================
+DATA: 2025-11-07 15:49
+DZIAŁANIE: Doprecyzowanie modelu embeddingów po migracji
+================================================================================
+
+WYKONANE AKCJE:
+1. Przeanalizowano sposób ładowania `intfloat/multilingual-e5-large` przez `SentenceTransformer`.
+2. Wyjaśniono, że pliki lądują w `~/.cache/huggingface/` i są linkowane z `models/embeddings/huggingface`.
+3. Przygotowano komendy do ręcznego pobrania embeddingów na nowej maszynie oraz odtworzenia symlinków.
+
+WYNIK: ✅ Kod działa optymalnie (użytkownik zna lokalizację i sposób pobrania embeddingów)
+
+UWAGI:
+- Po pobraniu warto wykonać `ln -sfn ~/.cache/huggingface models/embeddings/huggingface` w katalogu projektu.
+- Cache HuggingFace można skopiować z poprzedniej maszyny (`rsync -av ~/.cache/huggingface/ user@host:~/.cache/huggingface/`).
+
+================================================================================
+
+================================================================================
+DATA: 2025-11-07 16:05
+DZIAŁANIE: Przeniesienie pobierania modeli do katalogu projektu
+================================================================================
+
+WYKONANE AKCJE:
+1. Zaktualizowano moduły (app/app.py, app/rag_system.py, rag_system.py, app/hybrid_search.py) aby wymuszać pobieranie modeli Whisper, SentenceTransformer i CrossEncoder do `models/`.
+2. Dodano automatyczne tworzenie katalogów `models/whisper`, `models/embeddings`, `models/reranker` przy starcie aplikacji.
+3. Zmieniono interfejs Streamlit oraz dokumentację (PORTABLE_CHECKLIST.md, STRUKTURA_README.md, LISTA_ZMIAN_V4.md, AUDIO_INSTRUKCJA.md) tak, aby wskazywały nowe lokalizacje modeli.
+
+WYNIK: ✅ Kod działa optymalnie (modele przechowywane lokalnie w katalogu projektu)
+
+UWAGI:
+- Na świeżej instalacji modele zostaną automatycznie zapisane w `models/...` przy pierwszym uruchomieniu.
+- Na istniejących instalacjach warto usunąć stare symlinki do `~/.cache`, aby uniknąć korzystania z globalnego cache.
 
 ================================================================================
