@@ -4,69 +4,42 @@ __pycache__/
 *$py.class
 *.so
 .Python
-
-# Virtual Environment
 venv_rag/
-venv/
-env/
-ENV/
+*.egg-info/
 
-# Bazy danych (zawierają pełne teksty dokumentów)
+# Data i bazy
+data/
 vector_db/
-vector_db_public/
 vector_db_private/
-
-# Dane użytkownika (dokumenty)
-data/*.pdf
-data/*.docx
-data/*.xlsx
-data/*.jpg
-data/*.jpeg
-data/*.png
-data/*.bmp
-
-# Zachowaj strukturę folderu data ale bez plików
-!data/.gitkeep
-
-# Logi
-*.log
-nohup.out
-
-# Pliki tymczasowe
+vector_db_public/
 temp/
-tmp/
-*.tmp
+*.log
+logs/*.log
 
-# Pliki konfiguracyjne z hasłami
-auth_config.json
+# Modele AI (duże pliki, pobierane automatycznie)
+models/whisper/*.pt
+models/embeddings/models--*/
+models/embeddings/.locks/
+models/reranker/models--*/
 
-# Pliki wygenerowane
-image_descriptions.json
-suggested_questions.json
-audit_log.jsonl
-web_search_cache.json
+# Backup
+*_backup*/
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# OS
-.DS_Store
-Thumbs.db
+# Audyt i konfiguracja (mogą zawierać wrażliwe dane)
+audit_log.jsonl
+auth_config.json
 
-# Jupyter
-.ipynb_checkpoints/
-
-# Pliki systemowe
+# Cache
 .cache/
-
-# Nie ignoruj tych plików dokumentacji
-!README.md
-!requirements.txt
-!*.md
-!*.sh
-!*.py
-
+*.cache

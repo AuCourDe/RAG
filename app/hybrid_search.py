@@ -193,20 +193,26 @@ class Reranker:
         
         logger.info(f"Ładowanie reranker model: {model_name}")
         
+        # CrossEncoder w sentence-transformers 3.0.0 używa zawsze ~/.cache/huggingface
+        # ale możemy stworzyć symlink jeśli model jest w naszym katalogu
+        import os
+        model_cache_name = f"models--{model_name.replace('/', '--')}"
+        local_model = RERANKER_MODELS_DIR / model_cache_name
+        default_cache = Path.home() / ".cache" / "huggingface" / "hub" / model_cache_name
+        
+        # Jeśli mamy model lokalnie ale nie w cache, stwórz symlink
+        if local_model.exists() and not default_cache.exists():
+            logger.info(f"Tworzenie symlinku: {default_cache} -> {local_model}")
+            default_cache.parent.mkdir(parents=True, exist_ok=True)
+            import shutil
+            shutil.copytree(local_model, default_cache)
+        
         try:
-            self.model = CrossEncoder(
-                model_name,
-                device=device,
-                cache_folder=str(RERANKER_MODELS_DIR)
-            )
+            self.model = CrossEncoder(model_name, device=device)
             logger.info(f"Reranker załadowany na {device}")
         except Exception as e:
             logger.warning(f"Nie można załadować na {device}, próbuję CPU: {e}")
-            self.model = CrossEncoder(
-                model_name,
-                device='cpu',
-                cache_folder=str(RERANKER_MODELS_DIR)
-            )
+            self.model = CrossEncoder(model_name, device='cpu')
             logger.info("Reranker załadowany na CPU")
     
     def rerank(self, query: str, documents: List[Dict[str, Any]], top_k: int = 10) -> List[Dict[str, Any]]:

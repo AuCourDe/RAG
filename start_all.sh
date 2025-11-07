@@ -11,6 +11,17 @@ echo "===================================="
 echo "📁 Katalog projektu: $SCRIPT_DIR"
 echo ""
 
+# Inicjalizacja modeli AI
+echo "🔧 Inicjalizacja modeli AI..."
+echo "===================================="
+./venv_rag/bin/python3 init_models.py
+if [ $? -ne 0 ]; then
+    echo "❌ Błąd podczas inicjalizacji modeli!"
+    echo "Sprawdź logi powyżej i spróbuj ponownie."
+    exit 1
+fi
+echo ""
+
 # Uruchom watchdog w tle
 echo "👁️  Uruchamianie File Watcher (tło)..."
 nohup ./venv_rag/bin/python3 app/file_watcher.py > logs/file_watcher.log 2>&1 &
