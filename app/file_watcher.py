@@ -73,6 +73,12 @@ class DocumentWatcher(FileSystemEventHandler):
             logger.info(f"📄 Rozpoczynanie przetwarzania: {file_path.name}")
             start_time = time.time()
             
+            # Sprawdź czy plik już został dodany do bazy
+            existing = self.vector_db.collection.get(where={"source_file": file_path.name})
+            if existing and existing.get('ids'):
+                logger.info(f"⏭️ Plik {file_path.name} już istnieje w bazie – pomijam automatyczne indeksowanie")
+                return
+            
             # Przetwórz plik
             chunks = self.doc_processor.process_file(file_path)
             

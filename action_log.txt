@@ -4858,3 +4858,23 @@ UWAGI:
 - CrossEncoder kopiowany z ~/.cache do models/reranker (brak natywnego wsparcia cache_folder w v3.0.0).
 
 ================================================================================
+
+================================================================================
+Data: 2025-11-09 14:18
+Działanie: Usprawnienia uploadu i logów w interfejsie Streamlit
+================================================================================
+
+WYKONANE AKCJE:
+1. Automatyczne zapisywanie plików po dodaniu (bez dodatkowego przycisku) oraz ustawianie komunikatów "Pliki zapisane" i "Tworzenie bazy dla nowych plików".
+2. Poprawki UI: możliwość ręcznego ukrycia komunikatów, instrukcja sprawdzania postępu w logach.
+3. Sekcja logów: przełączenie między `rag_system.log` a `logs/file_watcher.log` (ostatnie 100 linii, bez `tail`).
+4. Session management: 10-minutowe wygaszanie sesji (bez wymuszonego ponownego logowania przy odświeżeniu przed upływem czasu).
+
+WYNIK: ✅ Kod działa optymalnie (pliki zapisywane automatycznie, postęp widoczny na życzenie).
+
+UWAGI:
+- Indeksowanie obrazów nadal może trwać kilkadziesiąt sekund (Gemma 3:12B) – użytkownik widzi status i logi.
+- W logach wyświetlane są dane tylko po zaznaczeniu "Pokaż logi".
+- Placeholdery (`.gitkeep`) utrzymują strukturę katalogów modeli.
+
+================================================================================

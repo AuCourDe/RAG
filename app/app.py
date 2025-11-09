@@ -18,6 +18,24 @@ import os
 import subprocess
 import requests
 import uuid
+from collections import deque
+
+SESSION_TIMEOUT_SECONDS = 600
+
+
+def tail_file(path: Path, max_lines: int = 100, fallback: Path | None = None) -> str:
+    """
+    Zwraca ostatnie max_lines linii z pliku logów.
+    """
+    if not path.exists() and fallback:
+        path = fallback
+    if not path.exists():
+        return ""
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            return "".join(deque(f, maxlen=max_lines))
+    except Exception:
+        return ""
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MODELS_DIR = PROJECT_ROOT / "models"
@@ -366,6 +384,48 @@ def init_rag_system():
     # Wyłączony spinner przez show_spinner=False w dekoratorze
     return RAGSystem()
 
+
+def index_files_now(file_paths, progress_callback=None):
+    """Natychmiastowe indeksowanie wskazanych plików."""
+    if not file_paths:
+        return 0
+    
+    rag = init_rag_system()
+    total = len(file_paths)
+    indexed_count = 0
+    
+    for idx, file_path in enumerate(file_paths, start=1):
+        stage = "done"
+        error = None
+        try:
+            collection = rag.vector_db.collection
+            existing = collection.get(where={"source_file": file_path.name})
+            if existing and existing.get('ids'):
+                stage = "skip"
+            else:
+                chunks = rag.doc_processor.process_file(file_path)
+                if not chunks:
+                    stage = "empty"
+                else:
+                    chunks_with_embeddings = rag.embedding_processor.create_embeddings(chunks)
+                    rag.vector_db.add_documents(chunks_with_embeddings)
+                    indexed_count += 1
+        except Exception as exc:
+            stage = "error"
+            error = exc
+            logging.error("Błąd podczas indeksowania %s: %s", file_path.name, exc, exc_info=True)
+        finally:
+            if progress_callback:
+                progress_callback(idx, total, file_path, stage, error)
+    
+    try:
+        rag.rebuild_bm25_index()
+    except Exception as exc:
+        logging.warning("Błąd podczas przebudowy BM25 po indeksowaniu: %s", exc)
+    
+    st.cache_resource.clear()
+    return indexed_count
+
 def get_gpu_stats():
     """Pobiera statystyki GPU (nie cache - zawsze świeże dane)"""
     try:
@@ -430,9 +490,12 @@ def main():
     """Główna funkcja aplikacji"""
     
     # Inicjalizacja session state
+    current_time = time.time()
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
         st.session_state.username = None
+    if 'auth_expiry' not in st.session_state:
+        st.session_state.auth_expiry = 0
     
     if 'theme' not in st.session_state:
         st.session_state.theme = 'dark'
@@ -462,10 +525,22 @@ def main():
     if 'upload_progress' not in st.session_state:
         st.session_state.upload_progress = {'status': None, 'percent': 0, 'message': ''}
     
+    if 'upload_feedback' not in st.session_state:
+        st.session_state.upload_feedback = ""
+    
     # Load CSS
     load_css()
     
     # Theme Toggle (tylko dla zalogowanych)
+    session_expired = False
+    if st.session_state.authenticated:
+        if current_time > st.session_state.get('auth_expiry', 0):
+            session_expired = True
+            st.session_state.authenticated = False
+            st.session_state.username = None
+        else:
+            st.session_state.auth_expiry = current_time + SESSION_TIMEOUT_SECONDS
+
     if st.session_state.authenticated:
         col_theme_1, col_theme_2 = st.columns([8, 2])
         with col_theme_2:
@@ -477,6 +552,8 @@ def main():
     
     # === EKRAN LOGOWANIA ===
     if not st.session_state.authenticated:
+        if session_expired:
+            st.warning("Sesja wygasła po 10 minutach bezczynności. Zaloguj się ponownie.")
         st.markdown("<div class='fade-in'>", unsafe_allow_html=True)
         st.title("Logowanie do systemu RAG")
         
@@ -494,6 +571,7 @@ def main():
                         st.session_state.authenticated = True
                         st.session_state.username = username
                         st.session_state.session_id = str(uuid.uuid4())[:8]
+                        st.session_state.auth_expiry = time.time() + SESSION_TIMEOUT_SECONDS
                         audit_logger.log_login(user_id=username, success=True)
                         st.success("Zalogowano pomyślnie")
                         st.rerun()
@@ -558,8 +636,16 @@ def main():
             st.rerun()
         
         # Placeholder na komunikaty o przetwarzaniu plików
-        if 'processing_status' in st.session_state and st.session_state.processing_status:
+        if st.session_state.get('upload_feedback'):
+            st.success(st.session_state.upload_feedback)
+            if st.button("Ukryj powiadomienie", key="clear_upload_feedback"):
+                st.session_state.upload_feedback = ""
+                st.rerun()
+        if st.session_state.get('processing_status'):
             st.info(st.session_state.processing_status)
+            if st.button("Ukryj komunikat", key="clear_processing_status"):
+                st.session_state.processing_status = ""
+                st.rerun()
         
         # Wykryj GPU i monitoring w czasie rzeczywistym
         gpu_stats = get_gpu_stats()
@@ -642,24 +728,19 @@ def main():
         
         if st.session_state.show_logs:
             with st.expander("Logi systemu (ostatnie 100 linii)", expanded=True):
-                try:
-                    log_file = Path("rag_system.log")
-                    if log_file.exists():
-                        # Użyj tail dla wydajności (plik może być bardzo duży)
-                        result = subprocess.run(
-                            ["tail", "-n", "100", str(log_file)],
-                            capture_output=True,
-                            text=True,
-                            timeout=5
-                        )
-                        if result.returncode == 0:
-                            st.code(result.stdout, language='log')
-                        else:
-                            st.error("Błąd odczytu logów")
+                rag_log = tail_file(Path("rag_system.log"), fallback=Path("logs/rag_system.log"))
+                watcher_log = tail_file(Path("logs/file_watcher.log"))
+                tab_rag, tab_watcher = st.tabs(["rag_system.log", "file_watcher.log"])
+                with tab_rag:
+                    if rag_log:
+                        st.code(rag_log, language="log")
                     else:
-                        st.info("Brak pliku logów")
-                except Exception as e:
-                    st.error(f"Błąd odczytu logów: {e}")
+                        st.info("Brak wpisów w rag_system.log")
+                with tab_watcher:
+                    if watcher_log:
+                        st.code(watcher_log, language="log")
+                    else:
+                        st.info("Brak wpisów w logs/file_watcher.log")
     
     # Główna zawartość
     st.title("RAG System")
@@ -951,96 +1032,71 @@ def main():
                             f"Wykryto {len(audio_files)} plik(ów) audio. Czas przetwarzania: ~3 min na każde 5 min nagrania"
                         )
                 
-                if st.button("Zapisz pliki", use_container_width=True, type="primary"):
-                    data_dir = Path("data")
-                    saved_files = []
+                data_dir = Path("data")
+                data_dir.mkdir(exist_ok=True)
+                saved_names = []
+                saved_paths = []
+                overwritten = []
+                
+                for uploaded_file in uploaded_files:
+                    try:
+                        file_path = data_dir / uploaded_file.name
+                        if file_path.exists():
+                            overwritten.append(uploaded_file.name)
+                        with open(file_path, 'wb') as f:
+                            f.write(uploaded_file.getbuffer())
+                        saved_names.append(uploaded_file.name)
+                        saved_paths.append(file_path)
+                        
+                        audit_logger.log_file_upload(
+                            user_id=st.session_state.username,
+                            filename=uploaded_file.name,
+                            file_size=uploaded_file.size,
+                            file_type=Path(uploaded_file.name).suffix.lower(),
+                            session_id=st.session_state.get('session_id', 'unknown')
+                        )
+                    except Exception as e:
+                        st.error(f"Błąd przy zapisywaniu {uploaded_file.name}: {e}")
+                
+                if saved_names:
+                    message = "✅ Pliki zapisane: " + ", ".join(saved_names)
+                    if overwritten:
+                        message += f" (nadpisano: {', '.join(overwritten)})"
+                    st.session_state.upload_feedback = message
                     
-                    # KROK 1: Zapisz pliki
-                    progress_bar = st.progress(0)
-                    status_text = st.empty()
+                    progress_bar = st.progress(0.0)
+                    status_placeholder = st.empty()
                     
-                    for idx, uploaded_file in enumerate(uploaded_files):
-                        try:
-                            progress = (idx + 1) / len(uploaded_files)
-                            progress_bar.progress(progress)
-                            status_text.text(f"Zapisywanie: {uploaded_file.name} ({idx + 1}/{len(uploaded_files)})")
-                            
-                            file_path = data_dir / uploaded_file.name
-                            with open(file_path, 'wb') as f:
-                                f.write(uploaded_file.getbuffer())
-                            
-                            saved_files.append(file_path)
-                            
-                            # Audit log
-                            audit_logger.log_file_upload(
-                                user_id=st.session_state.username,
-                                filename=uploaded_file.name,
-                                file_size=uploaded_file.size,
-                                file_type=Path(uploaded_file.name).suffix.lower(),
-                                session_id=st.session_state.get('session_id', 'unknown')
-                            )
-                                
-                        except Exception as e:
-                            st.error(f"Błąd przy zapisywaniu {uploaded_file.name}: {e}")
+                    def _progress(idx, total, file_path, stage, error):
+                        if total:
+                            progress_bar.progress(idx / total)
+                        name = file_path.name
+                        if stage == "done":
+                            status_placeholder.success(f"Zaindeksowano: {name}")
+                        elif stage == "skip":
+                            status_placeholder.info(f"Pomijam (już w bazie): {name}")
+                        elif stage == "empty":
+                            status_placeholder.warning(f"Brak fragmentów do indeksacji: {name}")
+                        elif stage == "error":
+                            status_placeholder.error(f"Błąd podczas indeksowania {name}: {error}")
+                    
+                    st.session_state.processing_status = (
+                        "Tworzenie bazy dla nowych plików... "
+                        "Postęp możesz śledzić w logach lub poniższym statusie."
+                    )
+                    
+                    indexed_now = index_files_now(saved_paths, _progress)
                     
                     progress_bar.empty()
-                    status_text.empty()
+                    status_placeholder.empty()
                     
-                    # KROK 2: Indeksuj zapisane pliki
-                    if saved_files:
-                        st.success(f"✅ Zapisano {len(saved_files)} plik(ów)")
-                        
-                        with st.spinner(f"Indeksowanie {len(saved_files)} plików..."):
-                            try:
-                                rag = init_rag_system()
-                                indexed_count = 0
-                                
-                                progress_bar = st.progress(0)
-                                status_text = st.empty()
-                                
-                                for idx, file_path in enumerate(saved_files):
-                                    try:
-                                        progress = (idx + 1) / len(saved_files)
-                                        progress_bar.progress(progress)
-                                        status_text.text(f"Indeksowanie: {file_path.name} ({idx + 1}/{len(saved_files)})")
-                                        
-                                        # Przetwórz plik
-                                        chunks = rag.doc_processor.process_file(file_path)
-                                        if chunks:
-                                            # Utwórz embeddingi
-                                            chunks_with_embeddings = rag.embedding_processor.create_embeddings(chunks)
-                                            # Dodaj do bazy
-                                            rag.vector_db.add_documents(chunks_with_embeddings)
-                                            indexed_count += 1
-                                            status_text.text(f"✅ Zaindeksowano: {file_path.name}")
-                                            time.sleep(0.5)
-                                        else:
-                                            status_text.text(f"⚠️ Brak fragmentów z: {file_path.name}")
-                                            time.sleep(1)
-                                    except Exception as e:
-                                        st.error(f"Błąd indeksowania {file_path.name}: {e}")
-                                
-                                progress_bar.empty()
-                                status_text.empty()
-                                
-                                if indexed_count > 0:
-                                    st.success(f"✅ Zaindeksowano {indexed_count} plików!")
-                                    # Przebuduj BM25 index
-                                    try:
-                                        rag.rebuild_bm25_index()
-                                    except:
-                                        pass
-                                    
-                                    # Wyczyść cache
-                                    st.cache_resource.clear()
-                                    st.session_state.processing_status = None
-                                    time.sleep(2)
-                                    st.rerun()
-                                else:
-                                    st.warning("Nie udało się zaindeksować żadnego pliku")
-                                    
-                            except Exception as e:
-                                st.error(f"Błąd podczas indeksowania: {e}")
+                    if indexed_now > 0:
+                        st.session_state.processing_status = f"Indeksowanie zakończone. Dodano {indexed_now} plik(ów)."
+                    else:
+                        st.session_state.processing_status = "Pliki już znajdowały się w bazie."
+                    
+                    st.session_state.file_uploader = None
+                    st.rerun()
         
         st.markdown("---")
         
@@ -1051,6 +1107,10 @@ def main():
         col_reindex, col_spacer = st.columns([1, 3])
         with col_reindex:
             if st.button("🔄 Reindeksuj wszystkie pliki", type="secondary", use_container_width=True):
+                st.session_state.processing_status = (
+                    "Tworzenie bazy dla istniejących plików (ręczna reindeksacja)... "
+                    "Postęp możesz śledzić w logach."
+                )
                 with st.spinner("Reindeksowanie plików w toku..."):
                     try:
                         data_dir = Path("data")
@@ -1097,6 +1157,7 @@ def main():
                             
                             if success_count > 0:
                                 st.success(f"✅ Zaindeksowano {success_count} nowych plików")
+                                st.session_state.processing_status = "Reindeksacja zakończona."
                                 # Przebuduj BM25 index
                                 try:
                                     rag.rebuild_bm25_index()
@@ -1107,8 +1168,10 @@ def main():
                                 st.rerun()
                             else:
                                 st.info("Wszystkie pliki już są w bazie")
+                                st.session_state.processing_status = ""
                         else:
                             st.warning("Brak plików do zindeksowania w folderze data/")
+                            st.session_state.processing_status = ""
                             
                     except Exception as e:
                         st.error(f"Błąd podczas reindeksacji: {e}")
