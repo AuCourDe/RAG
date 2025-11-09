@@ -527,6 +527,12 @@ def main():
     
     if 'upload_feedback' not in st.session_state:
         st.session_state.upload_feedback = ""
+    if 'upload_feedback_shown' not in st.session_state:
+        st.session_state.upload_feedback_shown = ""
+    if 'processing_status' not in st.session_state:
+        st.session_state.processing_status = ""
+    if 'processing_status_shown' not in st.session_state:
+        st.session_state.processing_status_shown = ""
     
     # Load CSS
     load_css()
@@ -549,6 +555,13 @@ def main():
             if st.button(theme_label, key="theme_toggle", use_container_width=True):
                 st.session_state.theme = 'light' if st.session_state.theme == 'dark' else 'dark'
                 st.rerun()
+
+    if st.session_state.get('upload_feedback') and st.session_state.upload_feedback != st.session_state.upload_feedback_shown:
+        st.toast(st.session_state.upload_feedback, icon="✅")
+        st.session_state.upload_feedback_shown = st.session_state.upload_feedback
+    if st.session_state.get('processing_status') and st.session_state.processing_status != st.session_state.processing_status_shown:
+        st.toast(st.session_state.processing_status, icon="ℹ️")
+        st.session_state.processing_status_shown = st.session_state.processing_status
     
     # === EKRAN LOGOWANIA ===
     if not st.session_state.authenticated:
@@ -640,11 +653,13 @@ def main():
             st.success(st.session_state.upload_feedback)
             if st.button("Ukryj powiadomienie", key="clear_upload_feedback"):
                 st.session_state.upload_feedback = ""
+                st.session_state.upload_feedback_shown = ""
                 st.rerun()
         if st.session_state.get('processing_status'):
             st.info(st.session_state.processing_status)
             if st.button("Ukryj komunikat", key="clear_processing_status"):
                 st.session_state.processing_status = ""
+                st.session_state.processing_status_shown = ""
                 st.rerun()
         
         # Wykryj GPU i monitoring w czasie rzeczywistym
@@ -728,19 +743,26 @@ def main():
         
         if st.session_state.show_logs:
             with st.expander("Logi systemu (ostatnie 100 linii)", expanded=True):
-                rag_log = tail_file(Path("rag_system.log"), fallback=Path("logs/rag_system.log"))
-                watcher_log = tail_file(Path("logs/file_watcher.log"))
-                tab_rag, tab_watcher = st.tabs(["rag_system.log", "file_watcher.log"])
-                with tab_rag:
-                    if rag_log:
-                        st.code(rag_log, language="log")
-                    else:
-                        st.info("Brak wpisów w rag_system.log")
-                with tab_watcher:
-                    if watcher_log:
-                        st.code(watcher_log, language="log")
-                    else:
-                        st.info("Brak wpisów w logs/file_watcher.log")
+                if 'log_source' not in st.session_state:
+                    st.session_state.log_source = "rag_system.log"
+                log_choice = st.radio(
+                    "Źródło logów",
+                    options=("rag_system.log", "logs/file_watcher.log"),
+                    index=0 if st.session_state.log_source == "rag_system.log" else 1,
+                    key="log_source_radio"
+                )
+                st.session_state.log_source = log_choice
+                if log_choice == "rag_system.log":
+                    log_path = Path("rag_system.log")
+                    fallback = Path("logs/rag_system.log")
+                else:
+                    log_path = Path("logs/file_watcher.log")
+                    fallback = None
+                log_content = tail_file(log_path, fallback=fallback)
+                if log_content:
+                    st.code(log_content, language="log")
+                else:
+                    st.info("Brak wpisów w wybranym logu")
     
     # Główna zawartość
     st.title("RAG System")
@@ -1062,7 +1084,10 @@ def main():
                     message = "✅ Pliki zapisane: " + ", ".join(saved_names)
                     if overwritten:
                         message += f" (nadpisano: {', '.join(overwritten)})"
+                    st.success(message)
                     st.session_state.upload_feedback = message
+                    st.session_state.upload_feedback_shown = ""
+                    st.toast(message, icon="✅")
                     
                     progress_bar = st.progress(0.0)
                     status_placeholder = st.empty()
@@ -1084,6 +1109,7 @@ def main():
                         "Tworzenie bazy dla nowych plików... "
                         "Postęp możesz śledzić w logach lub poniższym statusie."
                     )
+                    st.session_state.processing_status_shown = ""
                     
                     indexed_now = index_files_now(saved_paths, _progress)
                     
@@ -1094,6 +1120,7 @@ def main():
                         st.session_state.processing_status = f"Indeksowanie zakończone. Dodano {indexed_now} plik(ów)."
                     else:
                         st.session_state.processing_status = "Pliki już znajdowały się w bazie."
+                    st.session_state.processing_status_shown = ""
                     
                     st.session_state.file_uploader = None
                     st.rerun()

@@ -4878,3 +4878,22 @@ UWAGI:
 - Placeholdery (`.gitkeep`) utrzymują strukturę katalogów modeli.
 
 ================================================================================
+
+================================================================================
+Data: 2025-11-09 15:01
+Działanie: Poprawki UI – widoczność komunikatów i logów
+================================================================================
+
+WYKONANE AKCJE:
+1. Dodano natychmiastowe komunikaty (UI + toast) po zapisaniu plików i zakończeniu indeksacji.
+2. Indeksacja on-line z paskiem postępu i statusami, bez czekania na watchdog.
+3. Logi: przełącznik w sidebarze (radio) z obsługą `rag_system.log` i `logs/file_watcher.log`.
+4. Watchdog pomija pliki już obecne w bazie – brak duplikowania wpisów.
+
+WYNIK: ✅ Użytkownik widzi od razu, co dzieje się po uploadzie, a logi są dostępne w UI.
+
+UWAGI:
+- Komunikaty można ukryć ręcznie, sesja trwa 10 minut (z toastem przy wylogowaniu).
+- Upload nadal zapisuje pliki do `data/`, a logi pokazują ostatnie 100 linii.
+
+================================================================================
