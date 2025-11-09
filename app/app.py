@@ -416,6 +416,12 @@ def index_files_now(file_paths, progress_callback=None):
                     chunks_with_embeddings = rag.embedding_processor.create_embeddings(chunks)
                     rag.vector_db.add_documents(chunks_with_embeddings)
                     indexed_count += 1
+                    # weryfikacja czy dokument trafił do bazy
+                    verify = collection.get(where={"source_file": file_path.name}, include=['ids'])
+                    if not verify.get('ids'):
+                        logger.warning("Dokument %s nie został odnaleziony po dodaniu.", file_path.name)
+                    else:
+                        logger.info("Dodano %s (fragmentów: %d)", file_path.name, len(chunks))
         except Exception as exc:
             stage = "error"
             error = exc
