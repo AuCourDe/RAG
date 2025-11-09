@@ -549,9 +549,11 @@ def main():
     for token in expired_tokens:
         session_store.pop(token, None)
     
-    query_params = st.experimental_get_query_params()
-    qp_token = query_params.get('token', [None])
-    qp_token = qp_token[0] if qp_token else None
+    qp_value = st.query_params.get("token")
+    if isinstance(qp_value, list):
+        qp_token = qp_value[0] if qp_value else None
+    else:
+        qp_token = qp_value
     
     if not st.session_state.authenticated and qp_token and qp_token in session_store:
         session_data = session_store[qp_token]
@@ -564,7 +566,8 @@ def main():
             session_data['expiry'] = current_time + SESSION_TIMEOUT_SECONDS
         else:
             session_store.pop(qp_token, None)
-            st.experimental_set_query_params()  # usuń wygasły token
+            if "token" in st.query_params:
+                del st.query_params["token"]
     
     # Load CSS
     load_css()
@@ -576,7 +579,8 @@ def main():
             session_expired = True
             if st.session_state.session_token:
                 session_store.pop(st.session_state.session_token, None)
-                st.experimental_set_query_params()
+                if "token" in st.query_params:
+                    del st.query_params["token"]
                 st.session_state.session_token = None
             st.session_state.authenticated = False
             st.session_state.username = None
@@ -589,7 +593,7 @@ def main():
                 "expiry": current_time + SESSION_TIMEOUT_SECONDS,
                 "session_id": st.session_state.get('session_id', 'unknown')
             }
-            st.experimental_set_query_params(token=token)
+            st.query_params["token"] = token
 
     if st.session_state.authenticated:
         col_theme_1, col_theme_2 = st.columns([8, 2])
@@ -635,7 +639,7 @@ def main():
                             "expiry": time.time() + SESSION_TIMEOUT_SECONDS,
                             "session_id": st.session_state.session_id
                         }
-                        st.experimental_set_query_params(token=token)
+                        st.query_params["token"] = token
                         st.session_state.auth_expiry = time.time() + SESSION_TIMEOUT_SECONDS
                         audit_logger.log_login(user_id=username, success=True)
                         st.success("Zalogowano pomyślnie")
@@ -661,7 +665,8 @@ def main():
             st.session_state.username = None
             if st.session_state.session_token:
                 session_store.pop(st.session_state.session_token, None)
-                st.experimental_set_query_params()
+                if "token" in st.query_params:
+                    del st.query_params["token"]
             st.session_state.session_token = None
             st.rerun()
         
