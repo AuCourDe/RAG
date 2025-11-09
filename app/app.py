@@ -23,6 +23,12 @@ from collections import deque
 SESSION_TIMEOUT_SECONDS = 600
 
 
+@st.cache_resource
+def get_session_store():
+    """Przechowywanie aktywnych sesji (token -> dane)."""
+    return {}
+
+
 def tail_file(path: Path, max_lines: int = 100, fallback: Path | None = None) -> str:
     """
     Zwraca ostatnie max_lines linii z pliku logów.
@@ -496,6 +502,8 @@ def main():
         st.session_state.username = None
     if 'auth_expiry' not in st.session_state:
         st.session_state.auth_expiry = 0
+    if 'session_token' not in st.session_state:
+        st.session_state.session_token = None
     
     if 'theme' not in st.session_state:
         st.session_state.theme = 'dark'
@@ -534,6 +542,30 @@ def main():
     if 'processing_status_shown' not in st.session_state:
         st.session_state.processing_status_shown = ""
     
+    # Sesje wielokrotne (obsługa odświeżenia)
+    session_store = get_session_store()
+    # Porządki
+    expired_tokens = [token for token, data in session_store.items() if data['expiry'] < current_time]
+    for token in expired_tokens:
+        session_store.pop(token, None)
+    
+    query_params = st.experimental_get_query_params()
+    qp_token = query_params.get('token', [None])
+    qp_token = qp_token[0] if qp_token else None
+    
+    if not st.session_state.authenticated and qp_token and qp_token in session_store:
+        session_data = session_store[qp_token]
+        if session_data['expiry'] > current_time:
+            st.session_state.authenticated = True
+            st.session_state.username = session_data['username']
+            st.session_state.session_token = qp_token
+            st.session_state.auth_expiry = session_data['expiry']
+            st.session_state.session_id = session_data.get('session_id', 'unknown')
+            session_data['expiry'] = current_time + SESSION_TIMEOUT_SECONDS
+        else:
+            session_store.pop(qp_token, None)
+            st.experimental_set_query_params()  # usuń wygasły token
+    
     # Load CSS
     load_css()
     
@@ -542,10 +574,22 @@ def main():
     if st.session_state.authenticated:
         if current_time > st.session_state.get('auth_expiry', 0):
             session_expired = True
+            if st.session_state.session_token:
+                session_store.pop(st.session_state.session_token, None)
+                st.experimental_set_query_params()
+                st.session_state.session_token = None
             st.session_state.authenticated = False
             st.session_state.username = None
         else:
             st.session_state.auth_expiry = current_time + SESSION_TIMEOUT_SECONDS
+            token = st.session_state.session_token or str(uuid.uuid4())
+            st.session_state.session_token = token
+            session_store[token] = {
+                "username": st.session_state.username,
+                "expiry": current_time + SESSION_TIMEOUT_SECONDS,
+                "session_id": st.session_state.get('session_id', 'unknown')
+            }
+            st.experimental_set_query_params(token=token)
 
     if st.session_state.authenticated:
         col_theme_1, col_theme_2 = st.columns([8, 2])
@@ -584,6 +628,14 @@ def main():
                         st.session_state.authenticated = True
                         st.session_state.username = username
                         st.session_state.session_id = str(uuid.uuid4())[:8]
+                        token = str(uuid.uuid4())
+                        st.session_state.session_token = token
+                        session_store[token] = {
+                            "username": username,
+                            "expiry": time.time() + SESSION_TIMEOUT_SECONDS,
+                            "session_id": st.session_state.session_id
+                        }
+                        st.experimental_set_query_params(token=token)
                         st.session_state.auth_expiry = time.time() + SESSION_TIMEOUT_SECONDS
                         audit_logger.log_login(user_id=username, success=True)
                         st.success("Zalogowano pomyślnie")
@@ -607,6 +659,10 @@ def main():
         if st.button("Wyloguj", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.username = None
+            if st.session_state.session_token:
+                session_store.pop(st.session_state.session_token, None)
+                st.experimental_set_query_params()
+            st.session_state.session_token = None
             st.rerun()
         
         st.markdown("---")
@@ -987,6 +1043,11 @@ def main():
     # === TAB 2: INDEKSOWANIE ===
     with tab2:
         st.header("Zarządzanie dokumentami")
+        
+        if st.session_state.get('upload_feedback'):
+            st.success(st.session_state.upload_feedback)
+        if st.session_state.get('processing_status'):
+            st.info(st.session_state.processing_status)
         
         st.markdown("""
         System automatycznie indeksuje nowe pliki i aktualizuje bazę po dodaniu/usunięciu dokumentów.

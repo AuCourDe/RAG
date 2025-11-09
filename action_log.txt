@@ -4897,3 +4897,22 @@ UWAGI:
 - Upload nadal zapisuje pliki do `data/`, a logi pokazują ostatnie 100 linii.
 
 ================================================================================
+
+================================================================================
+Data: 2025-11-09 16:10
+Działanie: Naprawa komunikatów, logów i sesji (persist po odświeżeniu)
+================================================================================
+
+WYKONANE AKCJE:
+1. Wprowadzenie trwałych tokenów sesji (query param + cache) – odświeżenie okna nie wylogowuje przez 10 minut.
+2. Komunikaty po uploadzie i indeksacji trafiają do UI (tab + toast + sidebar) i można je ukryć.
+3. Logi konsoli dostępne z radiobuttonem (rag_system.log / file_watcher.log) – brak zależności od `tail`.
+4. Watchdog pomija pliki obecne już w bazie; indeksacja natychmiastowa w UI pozostaje.
+
+WYNIK: ✅ Po dodaniu pliku pojawia się komunikat i indeksacja startuje od razu, logi są widoczne, sesja wytrzymuje odświeżenie.
+
+UWAGI:
+- Token w URL usuwa się przy wylogowaniu lub po wygaśnięciu sesji.
+- Toasty działają tylko w przeglądarce; w logach status też się pojawia.
+
+================================================================================
