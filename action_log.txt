@@ -4916,3 +4916,19 @@ UWAGI:
 - Toasty działają tylko w przeglądarce; w logach status też się pojawia.
 
 ================================================================================
+2025-11-14 20:51:41 - Naprawiono błędy w projekcie:
+1. Błąd dodawania plików z poziomu frontendu:
+   - Zmieniono getbuffer() na read() dla lepszej kompatybilności
+   - Dodano weryfikację zapisu pliku (sprawdzenie istnienia i rozmiaru)
+   - Dodano lepsze logowanie błędów
+
+2. Błąd wyszukiwania danych:
+   - Naprawiono konwersję wyników hybrid_search do SourceReference
+   - Usunięto użycie nieistniejącego pola 'id' w SourceReference
+   - Poprawiono użycie 'page_number' zamiast 'page' w metadanych
+   - Dodano funkcję convert_hybrid_results_to_sources() w app.py
+   - Naprawiono konwersję w rag_system.py z obsługą różnych formatów metadanych
+   - Dodano normalizację score na distance
+
+Status: Naprawy zakończone, testy przeszły pomyślnie
+

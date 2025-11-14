@@ -391,6 +391,38 @@ def init_rag_system():
     return RAGSystem()
 
 
+def convert_hybrid_results_to_sources(hybrid_results):
+    """Konwertuje wyniki z hybrid_search do listy SourceReference"""
+    from rag_system import SourceReference
+    
+    sources = []
+    for doc in hybrid_results:
+        # Pobierz metadane - mogą być w różnych formatach
+        metadata = doc.get('metadata', {})
+        if isinstance(metadata, dict):
+            source_file = metadata.get('source_file', '')
+            page_number = metadata.get('page_number', metadata.get('page', 0))
+            element_id = metadata.get('element_id', '')
+        else:
+            # Fallback jeśli metadata nie jest dict
+            source_file = ''
+            page_number = 0
+            element_id = ''
+        
+        # Konwersja score na distance (rerank_score, rrf_score lub bm25_score)
+        score = doc.get('rerank_score', doc.get('rrf_score', doc.get('bm25_score', 0.5)))
+        distance = 1.0 - score if score <= 1.0 else 1.0 / (1.0 + score)  # Normalizacja jeśli score > 1
+        
+        sources.append(SourceReference(
+            content=doc.get('content', ''),
+            source_file=source_file,
+            page_number=page_number,
+            element_id=element_id,
+            distance=distance
+        ))
+    
+    return sources
+
 def index_files_now(file_paths, progress_callback=None):
     """Natychmiastowe indeksowanie wskazanych plików."""
     if not file_paths:
@@ -922,20 +954,23 @@ def main():
                         elif search_mode == "Tekst":
                             # Tylko BM25 (tekstowe)
                             if hasattr(rag, 'hybrid_search') and rag.hybrid_search:
-                                sources = rag.hybrid_search.search_bm25_only(question, n_results)
+                                hybrid_results = rag.hybrid_search.search_bm25_only(question, n_results)
+                                sources = convert_hybrid_results_to_sources(hybrid_results)
                             else:
                                 st.warning("BM25 search niedostępny, używam wyszukiwania wektorowego")
                                 sources = rag.vector_db.search(question, n_results)
                         elif search_mode == "Wektor + Tekst":
                             # Hybrydowe bez rerankingu
                             if hasattr(rag, 'hybrid_search') and rag.hybrid_search:
-                                sources = rag.hybrid_search.search(question, n_results, use_reranker=False)
+                                hybrid_results = rag.hybrid_search.search(question, n_results, use_reranker=False)
+                                sources = convert_hybrid_results_to_sources(hybrid_results)
                             else:
                                 sources = rag.vector_db.search(question, n_results)
                         else:  # "Wektor + Tekst + Reranking"
                             # Pełne hybrydowe z rerankerem
                             if hasattr(rag, 'hybrid_search') and rag.hybrid_search:
-                                sources = rag.hybrid_search.search(question, n_results, use_reranker=True)
+                                hybrid_results = rag.hybrid_search.search(question, n_results, use_reranker=True)
+                                sources = convert_hybrid_results_to_sources(hybrid_results)
                             else:
                                 sources = rag.vector_db.search(question, n_results)
                         
@@ -1137,8 +1172,18 @@ def main():
                         file_path = data_dir / uploaded_file.name
                         if file_path.exists():
                             overwritten.append(uploaded_file.name)
+                        
+                        # Użyj read() zamiast getbuffer() dla lepszej kompatybilności
+                        file_bytes = uploaded_file.read()
                         with open(file_path, 'wb') as f:
-                            f.write(uploaded_file.getbuffer())
+                            f.write(file_bytes)
+                        
+                        # Weryfikacja zapisu - sprawdź czy plik rzeczywiście istnieje i ma odpowiedni rozmiar
+                        if not file_path.exists():
+                            raise Exception(f"Plik nie został zapisany: {file_path}")
+                        if file_path.stat().st_size != len(file_bytes):
+                            raise Exception(f"Rozmiar zapisanego pliku nie zgadza się: oczekiwano {len(file_bytes)}, otrzymano {file_path.stat().st_size}")
+                        
                         saved_names.append(uploaded_file.name)
                         saved_paths.append(file_path)
                         
@@ -1151,6 +1196,7 @@ def main():
                         )
                     except Exception as e:
                         st.error(f"Błąd przy zapisywaniu {uploaded_file.name}: {e}")
+                        logger.error(f"Błąd zapisu pliku {uploaded_file.name}: {e}", exc_info=True)
                 
                 if saved_names:
                     message = "✅ Pliki zapisane: " + ", ".join(saved_names)
