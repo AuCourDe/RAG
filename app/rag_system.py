@@ -124,18 +124,20 @@ class DocumentChunk:
     element_id: str = ""  # ID elementu w dokumencie (np. numer sekcji)
     embedding: List[float] = field(default_factory=list)
 
-@dataclass
 class SourceReference:
     """Reprezentacja odniesienia do źródła"""
-    source_file: str
-    page_number: int
-    element_id: str
-    content: str
-    distance: float = 0.0
     
-    def __post_init__(self):
-        """Walidacja po inicjalizacji - ignoruj nieznane argumenty"""
-        pass
+    def __init__(self, source_file: str, page_number: int, element_id: str, content: str, distance: float = 0.0, **kwargs):
+        """
+        Inicjalizacja SourceReference.
+        Ignoruje nieznane argumenty (np. 'id' z hybrid_search).
+        """
+        # Ignoruj nieznane argumenty (np. 'id' z doc)
+        self.source_file = source_file
+        self.page_number = page_number
+        self.element_id = element_id
+        self.content = content
+        self.distance = distance
 
 class DocumentProcessor:
     """Klasa do przetwarzania różnych formatów dokumentów"""

@@ -4938,3 +4938,8 @@ Status: Naprawy zakończone, testy przeszły pomyślnie
    - Problem: hybrid_search zwraca dokumenty z kluczem 'id', ale SourceReference nie ma tego pola
    - Rozwiązanie: Jawnie przekazujemy tylko wymagane pola (content, source_file, page_number, element_id, distance)
 
+2025-11-14 21:20:56 - Naprawiono błąd SourceReference.init() got an unexpected keyword argument 'id'
+   - Dodano własny __init__ do SourceReference, który ignoruje nieznane argumenty (np. 'id')
+   - Problem: hybrid_search zwraca dokumenty z kluczem 'id', który nie jest częścią SourceReference
+   - Rozwiązanie: __init__ przyjmuje **kwargs i ignoruje nieznane argumenty
+
