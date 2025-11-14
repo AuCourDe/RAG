@@ -124,14 +124,20 @@ class DocumentChunk:
     element_id: str = ""  # ID elementu w dokumencie (np. numer sekcji)
     embedding: List[float] = field(default_factory=list)
 
-@dataclass
 class SourceReference:
     """Reprezentacja odniesienia do źródła"""
-    source_file: str
-    page_number: int
-    element_id: str
-    content: str
-    distance: float = 0.0
+    
+    def __init__(self, source_file: str, page_number: int, element_id: str, content: str, distance: float = 0.0, **kwargs):
+        """
+        Inicjalizacja SourceReference.
+        Ignoruje nieznane argumenty (np. 'id' z hybrid_search).
+        """
+        # Ignoruj nieznane argumenty (np. 'id' z doc)
+        self.source_file = source_file
+        self.page_number = page_number
+        self.element_id = element_id
+        self.content = content
+        self.distance = distance
 
 class DocumentProcessor:
     """Klasa do przetwarzania różnych formatów dokumentów"""
@@ -1378,20 +1384,38 @@ class RAGSystem:
                     # Konwertuj do formatu SourceReference
                     results = []
                     for doc in hybrid_results:
+                        # Pobierz metadane - mogą być w różnych formatach
+                        # UWAGA: doc może zawierać 'id', które NIE jest używane w SourceReference
+                        metadata = doc.get('metadata', {})
+                        if isinstance(metadata, dict):
+                            source_file = metadata.get('source_file', '')
+                            page_number = metadata.get('page_number', metadata.get('page', 0))
+                            chunk_type = metadata.get('chunk_type', 'text')
+                            element_id = metadata.get('element_id', '')
+                        else:
+                            # Fallback jeśli metadata nie jest dict
+                            source_file = ''
+                            page_number = 0
+                            chunk_type = 'text'
+                            element_id = ''
+                        
+                        # Konwersja score na distance (rerank_score lub rrf_score)
+                        score = doc.get('rerank_score', doc.get('rrf_score', 0.5))
+                        distance = 1.0 - score if score <= 1.0 else 1.0 / (1.0 + score)  # Normalizacja jeśli score > 1
+                        
+                        # Tworzenie SourceReference - NIE przekazujemy 'id' z doc
                         results.append(SourceReference(
-                            id=doc['id'],
-                            content=doc['content'],
-                            source_file=doc['metadata'].get('source_file', ''),
-                            page_number=doc['metadata'].get('page', 0),
-                            chunk_type=doc['metadata'].get('chunk_type', 'text'),
-                            element_id=doc['metadata'].get('element_id', ''),
-                            distance=1.0 - doc.get('rerank_score', 0.5)  # Konwersja score na distance
+                            content=doc.get('content', ''),
+                            source_file=source_file,
+                            page_number=page_number,
+                            element_id=element_id,
+                            distance=distance
                         ))
                     
                     logger.info(f"Hybrydowe wyszukiwanie: znaleziono {len(results)} dokumentów")
                     
                 except Exception as e:
-                    logger.error(f"Błąd hybrydowego wyszukiwania: {e}")
+                    logger.error(f"Błąd hybrydowego wyszukiwania: {e}", exc_info=True)
                     logger.info("Fallback: używam prostego vector search")
                     results = self.vector_db.search(question, n_results)
             else:

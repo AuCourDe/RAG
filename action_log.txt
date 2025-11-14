@@ -4916,3 +4916,30 @@ UWAGI:
 - Toasty działają tylko w przeglądarce; w logach status też się pojawia.
 
 ================================================================================
+2025-11-14 20:51:41 - Naprawiono błędy w projekcie:
+1. Błąd dodawania plików z poziomu frontendu:
+   - Zmieniono getbuffer() na read() dla lepszej kompatybilności
+   - Dodano weryfikację zapisu pliku (sprawdzenie istnienia i rozmiaru)
+   - Dodano lepsze logowanie błędów
+
+2. Błąd wyszukiwania danych:
+   - Naprawiono konwersję wyników hybrid_search do SourceReference
+   - Usunięto użycie nieistniejącego pola 'id' w SourceReference
+   - Poprawiono użycie 'page_number' zamiast 'page' w metadanych
+   - Dodano funkcję convert_hybrid_results_to_sources() w app.py
+   - Naprawiono konwersję w rag_system.py z obsługą różnych formatów metadanych
+   - Dodano normalizację score na distance
+
+Status: Naprawy zakończone, testy przeszły pomyślnie
+
+2025-11-14 21:05:22 - Naprawiono błąd: SourceReference.init() got an unexpected keyword argument 'id'
+   - Dodano komentarze wyjaśniające, że 'id' z doc nie jest przekazywane do SourceReference
+   - Upewniono się, że w convert_hybrid_results_to_sources() i rag_system.py nie przekazujemy 'id'
+   - Problem: hybrid_search zwraca dokumenty z kluczem 'id', ale SourceReference nie ma tego pola
+   - Rozwiązanie: Jawnie przekazujemy tylko wymagane pola (content, source_file, page_number, element_id, distance)
+
+2025-11-14 21:20:56 - Naprawiono błąd SourceReference.init() got an unexpected keyword argument 'id'
+   - Dodano własny __init__ do SourceReference, który ignoruje nieznane argumenty (np. 'id')
+   - Problem: hybrid_search zwraca dokumenty z kluczem 'id', który nie jest częścią SourceReference
+   - Rozwiązanie: __init__ przyjmuje **kwargs i ignoruje nieznane argumenty
+
