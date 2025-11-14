@@ -4932,3 +4932,9 @@ UWAGI:
 
 Status: Naprawy zakończone, testy przeszły pomyślnie
 
+2025-11-14 21:05:22 - Naprawiono błąd: SourceReference.init() got an unexpected keyword argument 'id'
+   - Dodano komentarze wyjaśniające, że 'id' z doc nie jest przekazywane do SourceReference
+   - Upewniono się, że w convert_hybrid_results_to_sources() i rag_system.py nie przekazujemy 'id'
+   - Problem: hybrid_search zwraca dokumenty z kluczem 'id', ale SourceReference nie ma tego pola
+   - Rozwiązanie: Jawnie przekazujemy tylko wymagane pola (content, source_file, page_number, element_id, distance)
+

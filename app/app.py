@@ -398,6 +398,7 @@ def convert_hybrid_results_to_sources(hybrid_results):
     sources = []
     for doc in hybrid_results:
         # Pobierz metadane - mogą być w różnych formatach
+        # UWAGA: doc może zawierać 'id', które NIE jest używane w SourceReference
         metadata = doc.get('metadata', {})
         if isinstance(metadata, dict):
             source_file = metadata.get('source_file', '')
@@ -413,6 +414,7 @@ def convert_hybrid_results_to_sources(hybrid_results):
         score = doc.get('rerank_score', doc.get('rrf_score', doc.get('bm25_score', 0.5)))
         distance = 1.0 - score if score <= 1.0 else 1.0 / (1.0 + score)  # Normalizacja jeśli score > 1
         
+        # Tworzenie SourceReference - NIE przekazujemy 'id' z doc
         sources.append(SourceReference(
             content=doc.get('content', ''),
             source_file=source_file,

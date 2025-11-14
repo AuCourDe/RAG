@@ -132,6 +132,10 @@ class SourceReference:
     element_id: str
     content: str
     distance: float = 0.0
+    
+    def __post_init__(self):
+        """Walidacja po inicjalizacji - ignoruj nieznane argumenty"""
+        pass
 
 class DocumentProcessor:
     """Klasa do przetwarzania różnych formatów dokumentów"""
@@ -1379,6 +1383,7 @@ class RAGSystem:
                     results = []
                     for doc in hybrid_results:
                         # Pobierz metadane - mogą być w różnych formatach
+                        # UWAGA: doc może zawierać 'id', które NIE jest używane w SourceReference
                         metadata = doc.get('metadata', {})
                         if isinstance(metadata, dict):
                             source_file = metadata.get('source_file', '')
@@ -1396,6 +1401,7 @@ class RAGSystem:
                         score = doc.get('rerank_score', doc.get('rrf_score', 0.5))
                         distance = 1.0 - score if score <= 1.0 else 1.0 / (1.0 + score)  # Normalizacja jeśli score > 1
                         
+                        # Tworzenie SourceReference - NIE przekazujemy 'id' z doc
                         results.append(SourceReference(
                             content=doc.get('content', ''),
                             source_file=source_file,
