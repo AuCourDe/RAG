@@ -1,47 +1,47 @@
 [
   {
-    "question": "Co reguluje Kodeks cywilny, zgodnie z artykułem 1?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-04 23:02:46"
+    "question": "Jakiego rodzaju strój ma na sobie mężczyzna na klatce?",
+    "source_file": "007.mp4",
+    "generated_at": "2025-11-17 22:39:11"
   },
   {
-    "question": "W jakim przypadku ustawa może mieć moc wsteczną?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-04 23:02:46"
+    "question": "Jaki wyraz twarzy sugeruje mimika mężczyzny na klatce?",
+    "source_file": "007.mp4",
+    "generated_at": "2025-11-17 22:39:11"
   },
   {
-    "question": "Na kim spoczywa ciężar udowodnienia faktu, zgodnie z artykułem 6?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-04 23:02:46"
+    "question": "Jakie kolory dominują w kolorystyce tła na klatce?",
+    "source_file": "007.mp4",
+    "generated_at": "2025-11-17 22:39:11"
   },
   {
-    "question": "Jakie stosunki cywilnoprawne reguluje niniejszy Kodeks?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-04 23:05:17"
+    "question": "Jakie kolory dominują na powierzchni Marsa przedstawionej na zdjęciu?",
+    "source_file": "duzakropka.jpg",
+    "generated_at": "2025-11-17 22:39:54"
   },
   {
-    "question": "Co stanowi podstawę do uznania działania uprawnionego za sprzeczne z zasadami współżycia społecznego?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-04 23:05:17"
+    "question": "Jaki element otacza planetę Mars na zdjęciu i jakiego koloru jest?",
+    "source_file": "duzakropka.jpg",
+    "generated_at": "2025-11-17 22:39:54"
   },
   {
-    "question": "Na kim spoczywa ciężar udowodnienia faktu, jeśli ustawa uzależnia skutki prawne od dobrej lub złej wiary?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-04 23:05:17"
+    "question": "Jaka jest kompozycja zdjęcia, czyli co znajduje się w centrum kadru?",
+    "source_file": "duzakropka.jpg",
+    "generated_at": "2025-11-17 22:39:54"
   },
   {
-    "question": "Jakie stosunki cywilnoprawne reguluje Kodeks cywilny?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-05 14:12:03"
+    "question": "Kto podlega odpowiedzialności karnej zgodnie z art. 1 § 1?",
+    "source_file": "KK.pdf",
+    "generated_at": "2025-11-17 22:41:00"
   },
   {
-    "question": "Czy ustawa ma moc wsteczną?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-05 14:12:03"
+    "question": "Zgodnie z jakim artykułem kodeksu karnego nie stanowi przestępstwa czyn zabroniony, którego społeczna szkodliwość jest znikoma?",
+    "source_file": "KK.pdf",
+    "generated_at": "2025-11-17 22:41:00"
   },
   {
-    "question": "Na kim spoczywa ciężar udowodnienia faktu, który ma skutki prawne?",
-    "source_file": "dokument1 (2).pdf",
-    "generated_at": "2025-11-05 14:12:03"
+    "question": "Jakie zasady należy uwzględniać przy stosowaniu kar i innych środków przewidzianych w kodeksie, zgodnie z art. 3?",
+    "source_file": "KK.pdf",
+    "generated_at": "2025-11-17 22:41:00"
   }
 ]

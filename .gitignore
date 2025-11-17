@@ -43,3 +43,7 @@ auth_config.json
 # Cache
 .cache/
 *.cache
+
+# Modele AI (za duże dla GitHub)
+app/models/
+models/

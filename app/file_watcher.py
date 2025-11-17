@@ -139,36 +139,14 @@ def start_watcher(directory: str = "data"):
         logger.error(f"❌ Folder {directory} nie istnieje!")
         return
     
-    # NOWE: Sprawdź czy są już pliki w folderze i zaindeksuj je
+    # UWAGA: Automatyczne indeksowanie istniejących plików przy starcie jest WYŁĄCZONE
+    # Pliki będą indeksowane tylko gdy:
+    # 1. Zostaną dodane nowe pliki do folderu data/ (automatycznie przez watchdog)
+    # 2. Zostaną ręcznie zindeksowane przez interfejs Streamlit (przycisk "Reindeksuj wszystkie pliki")
     event_handler = DocumentWatcher()
     
-    logger.info("🔍 Sprawdzam istniejące pliki w folderze...")
-    existing_files = []
-    supported_formats = {'.pdf', '.docx', '.xlsx', '.jpg', '.jpeg', '.png', '.bmp', 
-                        '.mp3', '.wav', '.flac', '.ogg', '.m4a',
-                        '.mp4', '.avi', '.mov', '.mkv', '.webm'}
-    
-    for file_path in path.glob('*'):
-        if file_path.is_file() and file_path.suffix.lower() in supported_formats:
-            existing_files.append(file_path)
-    
-    if existing_files:
-        logger.info(f"📦 Znaleziono {len(existing_files)} istniejących plików do indeksacji")
-        for file_path in existing_files:
-            logger.info(f"   📄 {file_path.name}")
-        
-        # Indeksuj istniejące pliki
-        logger.info("🚀 Indeksuję istniejące pliki...")
-        for file_path in existing_files:
-            try:
-                event_handler.process_new_file(file_path)
-                logger.info(f"   ✅ {file_path.name} - zaindeksowany")
-            except Exception as e:
-                logger.error(f"   ❌ {file_path.name} - błąd: {e}")
-        
-        logger.info(f"✅ Indeksacja istniejących plików zakończona!")
-    else:
-        logger.info("📭 Brak istniejących plików do indeksacji")
+    logger.info("📭 Watchdog będzie monitorował tylko NOWE pliki dodane do folderu")
+    logger.info("💡 Aby zindeksować istniejące pliki, użyj przycisku 'Reindeksuj wszystkie pliki' w interfejsie")
     
     observer = Observer()
     observer.schedule(event_handler, str(path), recursive=True)

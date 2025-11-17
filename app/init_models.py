@@ -34,15 +34,40 @@ def check_whisper_model(model_name: str = "base") -> bool:
     return model_file.exists()
 
 def download_whisper_model(model_name: str = "base") -> bool:
-    """Pobiera model Whisper"""
+    """Pobiera model Whisper bezpośrednio do models/whisper z pominięciem cache"""
     try:
         logger.info(f"Pobieranie modelu Whisper: {model_name}...")
         import whisper
-        whisper.load_model(model_name, download_root=str(WHISPER_MODELS_DIR))
-        logger.info(f"✅ Model Whisper {model_name} pobrany pomyślnie")
-        return True
+        
+        model_file = WHISPER_MODELS_DIR / f"{model_name}.pt"
+        
+        # Jeśli model już istnieje, sprawdź czy to nie symlink
+        if model_file.exists():
+            if model_file.is_symlink():
+                logger.info(f"Usuwam stary symlink: {model_file}")
+                model_file.unlink()
+            else:
+                logger.info(f"Model {model_name} już istnieje w {model_file}")
+                return True
+        
+        # Ustaw zmienną środowiskową aby wymusić lokalizację (pomija cache)
+        os.environ['WHISPER_CACHE_DIR'] = str(WHISPER_MODELS_DIR)
+        
+        # Pobierz model bezpośrednio do WHISPER_MODELS_DIR
+        logger.info(f"Pobieranie modelu {model_name} do {WHISPER_MODELS_DIR}...")
+        model = whisper.load_model(model_name, download_root=str(WHISPER_MODELS_DIR))
+        
+        # Sprawdź czy plik został zapisany
+        if model_file.exists():
+            file_size = model_file.stat().st_size
+            logger.info(f"Model Whisper {model_name} pobrany pomyślnie do {model_file} (rozmiar: {file_size / 1024 / 1024:.1f} MB)")
+            return True
+        else:
+            logger.error(f"Model {model_name} nie został zapisany w {model_file}")
+            return False
+            
     except Exception as e:
-        logger.error(f"❌ Błąd podczas pobierania Whisper {model_name}: {e}")
+        logger.error(f"Błąd podczas pobierania Whisper {model_name}: {e}")
         return False
 
 def check_embedding_model(model_name: str = "intfloat/multilingual-e5-large") -> bool:

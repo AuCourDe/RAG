@@ -1,0 +1,704 @@
+================================================================================
+INSTRUKCJA DEPLOYMENTU - RAG-REBORN
+================================================================================
+
+Data utworzenia: 2025-11-17
+Wersja systemu: v4.0
+System docelowy: Ubuntu 24.04 LTS
+
+================================================================================
+1. PRZYGOTOWANIE - KLONOWANIE REPOZYTORIUM
+================================================================================
+
+# Przejdź do folderu projekty
+cd ~/projekty
+
+# Sklonuj repozytorium (użyj Personal Access Token jeśli repo prywatne)
+# Token GitHub: [USUŃ PRZED COMMITEM - użyj własnego tokenu]
+git clone https://github.com/AuCourDe/RAG-Reborn.git
+
+# Przejdź do folderu projektu
+cd RAG-Reborn
+
+================================================================================
+2. INSTALACJA ZALEŻNOŚCI SYSTEMOWYCH
+================================================================================
+
+# Aktualizacja systemu
+sudo apt update && sudo apt upgrade -y
+
+# Instalacja podstawowych narzędzi
+sudo apt install -y \
+    python3.12 \
+    python3-pip \
+    python3-venv \
+    git \
+    curl \
+    wget \
+    htop \
+    tmux \
+    ffmpeg \
+    tesseract-ocr \
+    tesseract-ocr-pol \
+    build-essential
+
+# Weryfikacja wersji Pythona (powinno być 3.12+)
+python3 --version
+
+================================================================================
+3. TWORZENIE I AKTYWACJA ŚRODOWISKA WIRTUALNEGO
+================================================================================
+
+# Utwórz wirtualne środowisko
+python3 -m venv venv_rag
+
+# Aktywuj środowisko wirtualne
+source venv_rag/bin/activate
+
+# Upgrade pip, setuptools i wheel
+pip install --upgrade pip setuptools wheel
+
+================================================================================
+4. INSTALACJA ZALEŻNOŚCI PYTHON
+================================================================================
+
+# Instalacja wszystkich wymaganych pakietów (może potrwać 10-20 minut)
+pip install -r requirements.txt
+
+# Weryfikacja kluczowych bibliotek
+python3 -c "import torch; print(f'PyTorch: {torch.__version__}')"
+python3 -c "import chromadb; print('ChromaDB: OK')"
+python3 -c "import streamlit; print('Streamlit: OK')"
+python3 -c "import transformers; print('Transformers: OK')"
+
+================================================================================
+5. INSTALACJA OLLAMA (Lokalne modele LLM)
+================================================================================
+
+# Pobierz i zainstaluj Ollama
+curl -fsSL https://ollama.com/install.sh | sudo sh
+
+# Weryfikacja instalacji
+ollama --version
+
+# Pobierz model Gemma 3:12B (zajmie ~10 minut, ~8 GB download)
+# UWAGA: Użyj tmux aby nie stracić sesji przy długim pobieraniu
+tmux new -s ollama_download
+ollama pull gemma3:12b
+
+# Sprawdź czy model został pobrany
+ollama list
+
+# Odłącz się z tmux: Ctrl+B, potem D
+# Aby wrócić: tmux attach -s ollama_download
+
+================================================================================
+6. TWORZENIE WYMAGANYCH FOLDERÓW
+================================================================================
+
+# Utwórz foldery dla danych, bazy wektorowej i plików tymczasowych
+mkdir -p data vector_db temp logs
+
+# Utwórz puste pliki konfiguracyjne jeśli nie istnieją
+touch suggested_questions.json image_descriptions.json
+
+# Inicjalizuj pliki JSON jeśli są puste
+echo "[]" > suggested_questions.json
+echo "{}" > image_descriptions.json
+
+================================================================================
+7. INICJALIZACJA MODELI AI
+================================================================================
+
+# Upewnij się że jesteś w folderze projektu i venv jest aktywne
+cd ~/projekty/RAG-Reborn
+source venv_rag/bin/activate
+
+# Uruchom skrypt inicjalizacyjny (pobierze modele embeddings i reranker)
+python3 app/init_models.py
+
+# UWAGA: Modele HuggingFace pobierają się automatycznie przez sentence-transformers
+# NIE WYMAGANY jest token HuggingFace - modele są publiczne i dostępne bez autoryzacji
+# Modele lądują w ~/.cache/huggingface/ i są automatycznie używane przez system
+
+================================================================================
+8. KONFIGURACJA SYSTEMU
+================================================================================
+
+8.1. Konfiguracja haseł (auth_config.json)
+
+# Edytuj plik konfiguracyjny
+nano auth_config.json
+
+# Przykładowa struktura:
+{
+  "users": {
+    "admin": {
+      "password_hash": "<WYGENERUJ_NOWY_HASH>",
+      "name": "Administrator"
+    }
+  },
+  "openai": {
+    "api_key": "",
+    "model": "gpt-4o-mini",
+    "enabled": false
+  }
+}
+
+# Generowanie hasha hasła (SHA256):
+python3 -c "import hashlib; print(hashlib.sha256('TWOJE_NOWE_HASLO'.encode()).hexdigest())"
+
+# Domyślne hasło: admin123 (hash: 240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9)
+# ZMIEŃ TO HASŁO PRZED URUCHOMIENIEM W PRODUKCJI!
+
+8.2. Konfiguracja modeli LLM (opcjonalne)
+
+# Edytuj app/rag_system.py aby zmienić domyślne modele:
+# VISION_MODEL = "gemma3:12b"  # Model do opisu grafik
+# LLM_MODEL = "gemma3:12b"     # Model do generowania odpowiedzi
+
+# Lub użyj OpenAI API (szybsze, ale płatne):
+# Dodaj klucz API w auth_config.json w sekcji "openai"
+
+8.3. Konfiguracja portów i adresów (start_all.sh)
+
+# Edytuj start_all.sh jeśli chcesz zmienić port lub adres:
+nano start_all.sh
+
+# Domyślnie:
+# --server.address 0.0.0.0  # Dostęp z zewnątrz (wszystkie interfejsy)
+# --server.port 8501         # Port Streamlit
+
+# BEZPIECZEŃSTWO: 127.0.0.1 vs 0.0.0.0
+# 
+# 127.0.0.1 (localhost):
+#   - Tylko lokalny dostęp (z samej maszyny)
+#   - NIE MOŻNA się połączyć z zewnątrz przez przeglądarkę
+#   - Użyj jeśli chcesz dostęp tylko przez SSH tunnel
+#   - Przykład: ssh -L 8501:localhost:8501 user@azure-vm
+#
+# 0.0.0.0 (wszystkie interfejsy):
+#   - Dostęp z zewnątrz (przez przeglądarkę)
+#   - WYMAGANE jeśli chcesz używać aplikacji z przeglądarki
+#   - Bezpieczeństwo zapewniasz przez:
+#     1. Azure NSG (Network Security Group) - kontrolujesz kto może się połączyć
+#     2. Firewall na VM (ufw)
+#     3. Autoryzację w aplikacji (hasła w Streamlit)
+#     4. Opcjonalnie: Nginx reverse proxy + SSL
+#
+# REKOMENDACJA dla Azure:
+#   - Użyj 0.0.0.0 (aby aplikacja była dostępna z zewnątrz)
+#   - Zabezpiecz przez Azure NSG (tylko Twoje IP lub VPN)
+#   - Użyj silnych haseł w auth_config.json
+#   - Opcjonalnie: Nginx + SSL dla HTTPS
+
+================================================================================
+9. KONFIGURACJA FIREWALL (jeśli potrzebna)
+================================================================================
+
+**WAŻNE: Tylko port 8501 (Streamlit) musi być otwarty!**
+
+# Otwórz port 8501 dla Streamlit (główny frontend)
+sudo ufw allow 8501/tcp
+
+# Lub dla konkretnego IP (bezpieczniejsze):
+sudo ufw allow from <TWOJE_IP> to any port 8501
+
+# Włącz firewall
+sudo ufw enable
+
+# Sprawdź status
+sudo ufw status
+
+# UWAGA: Port 5001 (Flask) NIE MUSI być otwarty
+# Flask działa tylko lokalnie (localhost) i jest używany wewnętrznie przez Streamlit
+
+================================================================================
+10. URUCHOMIENIE SYSTEMU
+================================================================================
+
+**WAŻNE: Architektura serwerów**
+
+System używa dwóch serwerów:
+1. **Streamlit (port 8501)** - główny frontend webowy
+   - Uruchamiany przez start_all.sh
+   - Dostępny z zewnątrz (0.0.0.0)
+   - To jest główny interfejs użytkownika
+
+2. **Flask (port 5001)** - endpoint do uploadu plików
+   - Uruchamiany automatycznie w tle przez Streamlit
+   - Działa tylko lokalnie (localhost)
+   - Używany wewnętrznie przez JavaScript w przeglądarce
+   - NIE MUSI być dostępny z zewnątrz
+
+**Odpowiedź na pytanie:**
+- start_all.sh uruchamia TYLKO Streamlit (port 8501)
+- Flask jest uruchamiany automatycznie przez Streamlit w tle
+- Na Azure musisz otworzyć TYLKO port 8501 (Streamlit)
+- Port 5001 (Flask) NIE MUSI być otwarty w firewall/NSG
+
+**BEZPIECZEŃSTWO: 127.0.0.1 vs 0.0.0.0**
+
+Czy 127.0.0.1 jest bezpieczniejsze niż 0.0.0.0?
+
+TAK, ale z ważnym zastrzeżeniem:
+
+- **127.0.0.1 (localhost):**
+  - Tylko lokalny dostęp (z samej maszyny)
+  - NIE MOŻNA się połączyć z zewnątrz przez przeglądarkę
+  - Użyj jeśli chcesz dostęp TYLKO przez SSH tunnel:
+    ssh -L 8501:localhost:8501 user@azure-vm
+  - Wtedy w przeglądarce: http://localhost:8501
+
+- **0.0.0.0 (wszystkie interfejsy):**
+  - Dostęp z zewnątrz (przez przeglądarkę)
+  - WYMAGANE jeśli chcesz używać aplikacji z przeglądarki bez SSH
+  - Bezpieczeństwo zapewniasz przez:
+    1. Azure NSG - zezwól tylko na Twoje IP (nie "*")
+    2. Firewall na VM (ufw)
+    3. Silne hasła w auth_config.json
+    4. Opcjonalnie: Nginx + SSL
+
+**REKOMENDACJA dla Azure:**
+- Użyj 0.0.0.0 (aby aplikacja była dostępna z zewnątrz)
+- W Azure NSG: zamiast "*" użyj konkretnego IP (Twoje_IP/32)
+- To daje Ci dostęp z przeglądarki + bezpieczeństwo przez NSG
+
+================================================================================
+
+10.1. Uruchomienie w tle (tmux - zalecane dla produkcji)
+
+# Utwórz sesję tmux
+tmux new -s rag_system
+
+# Upewnij się że jesteś w folderze projektu i venv jest aktywne
+cd ~/projekty/RAG-Reborn
+source venv_rag/bin/activate
+
+# Uruchom system
+./start_all.sh
+
+# Odłącz się z tmux: Ctrl+B, potem D
+# Aby wrócić: tmux attach -s rag_system
+
+10.2. Uruchomienie jako serwis systemd (opcjonalne, dla produkcji)
+
+# Utwórz plik serwisu dla file watcher
+sudo nano /etc/systemd/system/rag-watcher.service
+
+# Zawartość:
+[Unit]
+Description=RAG File Watcher
+After=network.target ollama.service
+
+[Service]
+Type=simple
+User=$USER
+WorkingDirectory=/home/$USER/projekty/RAG-Reborn
+ExecStart=/home/$USER/projekty/RAG-Reborn/venv_rag/bin/python3 app/file_watcher.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# Utwórz plik serwisu dla frontendu
+sudo nano /etc/systemd/system/rag-frontend.service
+
+# Zawartość:
+[Unit]
+Description=RAG Streamlit Frontend
+After=network.target rag-watcher.service
+
+[Service]
+Type=simple
+User=$USER
+WorkingDirectory=/home/$USER/projekty/RAG-Reborn
+ExecStart=/home/$USER/projekty/RAG-Reborn/venv_rag/bin/python3 -m streamlit run app/app.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# Włącz i uruchom serwisy
+sudo systemctl daemon-reload
+sudo systemctl enable rag-watcher
+sudo systemctl enable rag-frontend
+sudo systemctl start rag-watcher
+sudo systemctl start rag-frontend
+
+# Sprawdź status
+sudo systemctl status rag-watcher
+sudo systemctl status rag-frontend
+
+================================================================================
+11. WERYFIKACJA DZIAŁANIA
+================================================================================
+
+# Sprawdź czy procesy działają
+ps aux | grep -E "streamlit|file_watcher|ollama"
+
+# Sprawdź czy port jest otwarty
+sudo netstat -tulpn | grep 8501
+
+# Sprawdź logi
+tail -f rag_system.log
+tail -f logs/file_watcher.log
+
+# Test lokalny
+curl http://localhost:8501
+
+# Dostęp z przeglądarki
+# http://localhost:8501 (lokalnie)
+# http://<IP_SERWERA>:8501 (zdalnie)
+
+# Domyślne dane logowania:
+# Użytkownik: admin
+# Hasło: admin123 (ZMIEŃ TO!)
+
+================================================================================
+12. DEPLOYMENT NA AZURE VM
+================================================================================
+
+12.1. Wymagania Azure VM
+
+Minimalne (CPU Mode):
+- VM Size: Standard_D4s_v3 lub większy
+- vCPU: 4 cores
+- RAM: 16 GB
+- Disk: 128 GB SSD (Premium SSD)
+- OS: Ubuntu 22.04 LTS lub 24.04 LTS
+- Network: Public IP + port 8501 otwarty w Network Security Group
+- Koszty: ~$140/miesiąc
+
+Rekomendowane (z GPU):
+- VM Size: Standard_NC6s_v3 (NVIDIA Tesla V100)
+- vCPU: 6 cores
+- RAM: 112 GB
+- GPU: 16 GB VRAM
+- Disk: 256 GB Premium SSD
+- OS: Ubuntu 22.04 LTS (z CUDA drivers)
+- Koszty: ~$900/miesiąc
+
+Budżetowa opcja (testy):
+- VM Size: Standard_B2ms
+- vCPU: 2 cores
+- RAM: 8 GB
+- Disk: 64 GB
+- Mode: CPU-only
+- Koszty: ~$60/miesiąc
+
+12.2. Konfiguracja Network Security Group (Azure Portal)
+
+**WAŻNE: Tylko port 8501 (Streamlit) musi być otwarty!**
+
+1. Przejdź do Azure Portal → Virtual Machines → Twoja VM
+2. Kliknij "Networking" w lewym menu
+3. Kliknij "Add inbound port rule"
+4. Dodaj regułę:
+   - Port: 8501
+   - Protocol: TCP
+   - Source: * (lub Twoje IP dla bezpieczeństwa - REKOMENDOWANE!)
+   - Name: Allow_Streamlit
+5. Zapisz zmiany
+
+**BEZPIECZEŃSTWO w Azure:**
+
+1. **Azure NSG (Network Security Group)** - główna warstwa bezpieczeństwa:
+   - Zamiast "*" użyj konkretnego IP: "Twoje_IP/32"
+   - Lub użyj VPN i zezwól tylko na IP VPN
+   - To kontroluje kto może się połączyć z zewnątrz
+
+2. **Firewall na VM** (ufw):
+   - Dodatkowa warstwa ochrony
+   - sudo ufw allow from <TWOJE_IP> to any port 8501
+
+3. **Autoryzacja w aplikacji**:
+   - Silne hasła w auth_config.json
+   - Zmień domyślne hasło "admin123"!
+
+4. **Opcjonalnie: Nginx + SSL**:
+   - Reverse proxy z HTTPS
+   - Dodatkowa warstwa bezpieczeństwa
+   - Instrukcja w sekcji 12.5
+
+**UWAGA:**
+- Port 5001 (Flask) NIE MUSI być otwarty - działa tylko lokalnie
+- Flask jest używany wewnętrznie przez Streamlit do uploadu plików
+- Wszystkie żądania z przeglądarki idą przez Streamlit (port 8501)
+- Użycie 0.0.0.0 jest BEZPIECZNE jeśli zabezpieczysz przez NSG i hasła
+
+12.3. Instalacja CUDA (tylko dla VM z GPU)
+
+# Sprawdź czy GPU jest dostępne
+nvidia-smi
+
+# Jeśli brak GPU, zainstaluj CUDA drivers:
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get -y install cuda-drivers cuda-toolkit-12-8
+
+# Reboot VM
+sudo reboot
+
+# Sprawdź ponownie
+nvidia-smi
+
+12.4. Użycie konsoli szeregowej Azure
+
+# ZAWSZE używaj tmux dla długich operacji (konsola może się rozłączyć)
+tmux new -s installation
+
+# Wykonaj wszystkie komendy z sekcji 1-10
+
+# Odłącz: Ctrl+B, potem D
+# Wrócić: tmux attach -s installation
+
+12.5. HTTPS/SSL (opcjonalne, zalecane dla produkcji)
+
+Opcja A: Nginx Reverse Proxy + Let's Encrypt
+
+sudo apt install nginx certbot python3-certbot-nginx
+
+# Konfiguracja Nginx
+sudo nano /etc/nginx/sites-available/rag
+
+# Zawartość:
+server {
+    listen 80;
+    server_name <TWOJA_DOMENA_LUB_IP>;
+    
+    location / {
+        proxy_pass http://localhost:8501;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+    }
+}
+
+# Włącz stronę
+sudo ln -s /etc/nginx/sites-available/rag /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+
+# SSL (jeśli masz domenę):
+sudo certbot --nginx -d twoja-domena.pl
+
+Opcja B: Cloudflare Tunnel (bez domeny, darmowe HTTPS)
+
+# Zainstaluj cloudflared
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+sudo dpkg -i cloudflared-linux-amd64.deb
+
+# Uruchom tunel (w tmux!)
+tmux new -s cloudflare
+cloudflared tunnel --url http://localhost:8501
+
+# Otrzymasz URL: https://xyz.trycloudflare.com
+# HTTPS automatyczne!
+
+================================================================================
+13. GDZIE ZMIENIAĆ KONFIGURACJĘ
+================================================================================
+
+13.1. Hasła użytkowników
+   Plik: auth_config.json
+   Sekcja: "users"
+   Format: SHA256 hash hasła
+
+13.2. OpenAI API (opcjonalne)
+   Plik: auth_config.json
+   Sekcja: "openai"
+   Pola: "api_key", "model", "enabled"
+
+13.3. Modele LLM (lokalne)
+   Plik: app/rag_system.py
+   Linie: 110-111
+   Zmienne: VISION_MODEL, LLM_MODEL
+   Domyślnie: "gemma3:12b"
+
+13.4. Port i adres serwera
+   Plik: start_all.sh
+   Linia: 51-54
+   Parametry: --server.address, --server.port
+
+13.5. Ścieżki folderów
+   Plik: app/rag_system.py
+   Linie: 93-100
+   Zmienne: BASE_DIR, DATA_DIR, VECTOR_DB_DIR, TEMP_DIR, MODELS_DIR
+
+13.6. Modele embeddings i reranker
+   Plik: app/init_models.py
+   Funkcje: download_embedding_model(), download_reranker_model()
+   Domyślnie:
+   - Embeddings: "intfloat/multilingual-e5-large"
+   - Reranker: "cross-encoder/ms-marco-MiniLM-L-12-v2"
+
+13.7. Logowanie (poziomy logów)
+   Plik: app/rag_system.py
+   Linia: 80
+   Zmiana: level=logging.INFO (lub DEBUG, WARNING, ERROR)
+
+================================================================================
+14. TOKEN HUGGINGFACE - CZY JEST POTRZEBNY?
+================================================================================
+
+NIE - token HuggingFace NIE JEST WYMAGANY!
+
+Modele używane w systemie są publiczne i dostępne bez autoryzacji:
+- intfloat/multilingual-e5-large (embeddings)
+- cross-encoder/ms-marco-MiniLM-L-12-v2 (reranker)
+
+Biblioteka sentence-transformers automatycznie pobiera te modele z HuggingFace
+i zapisuje je w ~/.cache/huggingface/hub/
+
+Token HuggingFace byłby potrzebny TYLKO gdybyś chciał używać modeli prywatnych
+lub gated models (modele wymagające akceptacji licencji).
+
+================================================================================
+15. ROZWIĄZYWANIE PROBLEMÓW
+================================================================================
+
+15.1. Port 8501 zajęty
+   # Znajdź proces
+   sudo lsof -i :8501
+   # Zabij proces
+   sudo kill -9 <PID>
+   # Lub zmień port w start_all.sh
+
+15.1a. Port 5001 (Flask) - informacja
+   # Flask działa na porcie 5001, ale tylko lokalnie (localhost)
+   # NIE MUSI być otwarty w firewall - działa wewnętrznie
+   # Jeśli widzisz błędy z portem 5001, sprawdź czy Streamlit działa
+   # Flask jest uruchamiany automatycznie przez Streamlit
+
+15.2. Ollama nie odpowiada
+   # Sprawdź status
+   systemctl status ollama
+   # Restart
+   sudo systemctl restart ollama
+   # Sprawdź logi
+   journalctl -u ollama -f
+
+15.3. Brak pamięci RAM
+   # Dodaj SWAP
+   sudo fallocate -l 8G /swapfile
+   sudo chmod 600 /swapfile
+   sudo mkswap /swapfile
+   sudo swapon /swapfile
+   echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+15.4. Modele nie pobierają się
+   # Sprawdź połączenie internetowe
+   ping huggingface.co
+   # Sprawdź miejsce na dysku
+   df -h
+   # Sprawdź logi
+   tail -f rag_system.log
+
+15.5. Błędy uprawnień
+   # Napraw uprawnienia
+   sudo chown -R $USER:$USER ~/projekty/RAG-Reborn
+   chmod -R 755 ~/projekty/RAG-Reborn
+
+15.6. Streamlit nie startuje
+   # Sprawdź czy venv jest aktywne
+   which python3
+   # Sprawdź czy wszystkie zależności są zainstalowane
+   pip list | grep streamlit
+   # Sprawdź logi
+   tail -f rag_system.log
+
+================================================================================
+16. MONITORING I MAINTENANCE
+================================================================================
+
+16.1. Sprawdzanie statusu
+   # Procesy
+   ps aux | grep -E "streamlit|file_watcher|ollama"
+   # Porty
+   sudo netstat -tulpn | grep -E "8501|11434"
+   # GPU usage (jeśli GPU VM)
+   watch -n 1 nvidia-smi
+   # Logi
+   tail -f rag_system.log
+   tail -f logs/file_watcher.log
+   tail -f audit_log.jsonl
+
+16.2. Backup bazy wektorowej
+   # Ręczny backup
+   tar -czf vector_db_backup_$(date +%Y%m%d).tar.gz vector_db/
+   # Automatyczny backup (cron - codziennie o 2:00)
+   crontab -e
+   # Dodaj linię:
+   0 2 * * * cd ~/projekty/RAG-Reborn && tar -czf ~/backups/vector_db_$(date +\%Y\%m\%d).tar.gz vector_db/
+   # Utwórz folder backups
+   mkdir -p ~/backups
+
+16.3. Aktualizacja systemu
+   # Co tydzień:
+   cd ~/projekty/RAG-Reborn
+   git pull origin main
+   source venv_rag/bin/activate
+   pip install -r requirements.txt --upgrade
+   # Restart serwisów
+   sudo systemctl restart rag-watcher
+   sudo systemctl restart rag-frontend
+
+================================================================================
+17. PEŁNA LISTA KOMEND DO WKLEJENIA (Ubuntu 24.04)
+================================================================================
+
+# Wykonaj wszystkie komendy sekwencyjnie:
+
+cd ~/projekty
+git clone https://github.com/AuCourDe/RAG-Reborn.git
+cd RAG-Reborn
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y python3.12 python3-pip python3-venv git curl wget htop tmux ffmpeg tesseract-ocr tesseract-ocr-pol build-essential
+python3 -m venv venv_rag
+source venv_rag/bin/activate
+pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+curl -fsSL https://ollama.com/install.sh | sudo sh
+ollama pull gemma3:12b
+mkdir -p data vector_db temp logs
+touch suggested_questions.json image_descriptions.json
+echo "[]" > suggested_questions.json
+echo "{}" > image_descriptions.json
+python3 app/init_models.py
+tmux new -s rag_system
+cd ~/projekty/RAG-Reborn
+source venv_rag/bin/activate
+./start_all.sh
+
+# Po uruchomieniu, odłącz się z tmux: Ctrl+B, potem D
+# Aby wrócić: tmux attach -s rag_system
+
+================================================================================
+18. DODATKOWE INFORMACJE
+================================================================================
+
+Dokumentacja:
+- docs/README.md - główna dokumentacja
+- docs/AZURE_DEPLOYMENT.md - szczegółowa instrukcja Azure
+- docs/PLAN_ROZWOJU.md - architektura systemu
+- docs/WORKFLOW_I_SKALOWANIE.md - workflow i skalowanie
+
+Logi:
+- rag_system.log - główny log systemu
+- logs/file_watcher.log - log file watchera
+- audit_log.jsonl - log aktywności użytkowników (GDPR)
+
+Kontakt i wsparcie:
+- Sprawdź logi w przypadku problemów
+- Większość błędów jest logowana w rag_system.log
+- Użyj tmux aby nie stracić sesji przy długich operacjach
+
+================================================================================
+KONIEC INSTRUKCJI
+================================================================================
+

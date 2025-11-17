@@ -204,6 +204,15 @@ class DocumentProcessor:
             
             with pdfplumber.open(file_path) as pdf:
                 logger.info(f"PDF {file_path} ma {len(pdf.pages)} stron")
+                
+                # Najpierw zbierz cały tekst z dokumentu dla kontekstu
+                all_text = []
+                for page in pdf.pages:
+                    page_text = page.extract_text()
+                    if page_text:
+                        all_text.append(page_text)
+                full_document_text = "\n".join(all_text)
+                
                 for page_num, page in enumerate(pdf.pages, 1):
                     logger.debug(f"Przetwarzanie strony {page_num}")
                     
@@ -235,8 +244,44 @@ class DocumentProcessor:
                                 with open(img_path, 'wb') as f:
                                     f.write(img_data)
                                 
-                                # Opis obrazu
-                                description = self._describe_image(img_path)
+                                # Przygotuj kontekst: tekst przed i po grafice (z tej samej strony)
+                                context_before = ""
+                                context_after = ""
+                                
+                                if text:
+                                    # Znajdź tekst przed i po grafice (przybliżenie - użyj całego tekstu strony)
+                                    # Dla lepszego kontekstu użyj też tekstu z sąsiednich stron
+                                    context_parts = []
+                                    if page_num > 1:
+                                        prev_page_text = pdf.pages[page_num - 2].extract_text()
+                                        if prev_page_text:
+                                            # Ostatnie 2-3 zdania z poprzedniej strony
+                                            prev_sentences = prev_page_text.split('.')[-3:]
+                                            context_parts.append("Tekst przed grafiką (z poprzedniej strony): " + ". ".join(prev_sentences))
+                                    
+                                    # Tekst z obecnej strony
+                                    page_sentences = text.split('.')
+                                    if len(page_sentences) > 2:
+                                        # Pierwsze 2-3 zdania i ostatnie 2-3 zdania
+                                        context_parts.append("Tekst przed grafiką: " + ". ".join(page_sentences[:3]))
+                                        context_parts.append("Tekst po grafice: " + ". ".join(page_sentences[-3:]))
+                                    else:
+                                        context_parts.append("Tekst na stronie: " + text[:500])
+                                    
+                                    if page_num < len(pdf.pages):
+                                        next_page_text = pdf.pages[page_num].extract_text()
+                                        if next_page_text:
+                                            # Pierwsze 2-3 zdania z następnej strony
+                                            next_sentences = next_page_text.split('.')[:3]
+                                            context_parts.append("Tekst po grafice (z następnej strony): " + ". ".join(next_sentences))
+                                    
+                                    context_text = "\n".join(context_parts)
+                                else:
+                                    # Jeśli brak tekstu na stronie, użyj fragmentu z całego dokumentu
+                                    context_text = full_document_text[:1000] if len(full_document_text) > 0 else ""
+                                
+                                # Opis obrazu z kontekstem
+                                description = self._describe_image(img_path, context=context_text, image_type="document_image")
                                 if description:
                                     logger.debug(f"Wygenerowano opis grafiki, długość: {len(description)} znaków")
                                     chunks.append(DocumentChunk(
@@ -314,8 +359,11 @@ class DocumentProcessor:
                             with open(img_path, 'wb') as f:
                                 f.write(image_bytes)
                             
-                            # Rozpoznaj przez Gemma 3
-                            description = self._describe_image(img_path)
+                            # Przygotuj kontekst z tekstu dokumentu
+                            context_text = text[:1000] if text else full_text[:1000] if full_text else ""
+                            
+                            # Rozpoznaj przez Gemma 3 z kontekstem
+                            description = self._describe_image(img_path, context=context_text, image_type="document_image")
                             if description:
                                 logger.debug(f"Wygenerowano opis obrazu z DOCX, długość: {len(description)} znaków")
                                 chunks.append(DocumentChunk(
@@ -358,6 +406,9 @@ class DocumentProcessor:
             
             total_images = 0
             
+            # Zbierz cały tekst z wszystkich arkuszy dla kontekstu
+            all_sheets_text = []
+            
             for sheet_idx, sheet_name in enumerate(workbook.sheetnames):
                 sheet = workbook[sheet_name]
                 sheet_content = []
@@ -372,6 +423,7 @@ class DocumentProcessor:
                 
                 if sheet_content:
                     text = f"Arkusz: {sheet_name}\n" + "\n".join(sheet_content)
+                    all_sheets_text.append(text)
                     text_chunks = self._chunk_text(text)
                     logger.debug(f"Znaleziono dane w arkuszu {sheet_name} ({row_count} wierszy), podzielono na {len(text_chunks)} fragmentów")
                     for i, chunk in enumerate(text_chunks):
@@ -399,8 +451,13 @@ class DocumentProcessor:
                                 image_pil = image._data()
                                 image_pil.save(img_path)
                                 
-                                # Rozpoznaj przez Gemma 3
-                                description = self._describe_image(img_path)
+                                # Przygotuj kontekst z tekstu arkusza i całego dokumentu
+                                sheet_text = text if sheet_content else ""
+                                full_doc_text = "\n".join(all_sheets_text)
+                                context_text = (sheet_text[:500] + "\n\n" + full_doc_text[:500]) if full_doc_text else sheet_text[:1000]
+                                
+                                # Rozpoznaj przez Gemma 3 z kontekstem
+                                description = self._describe_image(img_path, context=context_text, image_type="document_image")
                                 if description:
                                     logger.debug(f"Wygenerowano opis obrazu z Excel, długość: {len(description)} znaków")
                                     chunks.append(DocumentChunk(
@@ -437,7 +494,7 @@ class DocumentProcessor:
         try:
             # Opis obrazu przez Gemma 3 (główna metoda)
             logger.debug("Rozpoczynanie analizy obrazu przez Gemma 3:12B...")
-            description = self._describe_image(file_path)
+            description = self._describe_image(file_path, context=None, image_type="standalone_image")
             if description:
                 logger.debug(f"Wygenerowano opis grafiki przez Gemma 3, długość: {len(description)} znaków")
                 chunks.append(DocumentChunk(
@@ -788,17 +845,22 @@ class DocumentProcessor:
             
             # Oblicz które klatki wyciągnąć (1 klatka/sekundę)
             frames_to_extract = []
-            for second in range(int(duration) + 1):
+            # OPTYMALIZACJA: Analizuj co 2 sekundy zamiast co 1 (2x szybsze)
+            # Dla krótkich wideo (<30s) - co 1 sekundę, dla dłuższych - co 2 sekundy
+            frame_interval = 1 if duration <= 30 else 2
+            for second in range(0, int(duration) + 1, frame_interval):
                 frame_num = int(second * fps)
                 if frame_num < total_frames:
                     frames_to_extract.append((second, frame_num))
             
-            logger.info(f"[FRAMES] Będę analizować {len(frames_to_extract)} klatek (1 klatka/sekundę)")
+            logger.info(f"[FRAMES] Będę analizować {len(frames_to_extract)} klatek (1 klatka/{frame_interval} sekundę)")
             
             # Ekstrakcja i rozpoznawanie klatek
             frame_descriptions = {}
+            previous_frame_description = None
+            previous_second = None
             
-            for second, frame_num in frames_to_extract:
+            for idx, (second, frame_num) in enumerate(frames_to_extract):
                 try:
                     # Przejdź do klatki
                     video.set(cv2.CAP_PROP_POS_FRAMES, frame_num)
@@ -811,16 +873,35 @@ class DocumentProcessor:
                     frame_temp = TEMP_DIR / f"temp_frame_{uuid.uuid4()}.jpg"
                     cv2.imwrite(str(frame_temp), frame)
                     
-                    # Rozpoznaj przez Gemma 3
-                    if second % 5 == 0:  # Log co 5 sekund
-                        logger.info(f"   Analiza klatki {second}s/{int(duration)}s...")
+                    # Przygotuj kontekst dla klatki
+                    context_parts = []
+                    if idx == 0:
+                        # Pierwsza klatka
+                        context_parts.append(f"To jest pierwsza klatka filmu, sekunda {second}. Opisz ją szczegółowo.")
+                    else:
+                        # Kolejne klatki - dodaj kontekst poprzedniej klatki
+                        time_diff = second - previous_second
+                        context_parts.append(f"To jest kolejna klatka filmu, sekunda {second} ({time_diff} sekund po poprzedniej klatce).")
+                        if previous_frame_description:
+                            context_parts.append(f"Poprzednia klatka (sekunda {previous_second}): {previous_frame_description[:300]}...")
+                        context_parts.append("Opisz tę klatkę szczegółowo, zwracając uwagę na zmiany w stosunku do poprzedniej klatki.")
                     
-                    description = self._describe_image(frame_temp)
+                    context_text = "\n".join(context_parts)
+                    
+                    # Rozpoznaj przez Gemma 3 z kontekstem
+                    logger.info(f"   Analiza klatki {second}s/{int(duration)}s... ({idx+1}/{len(frames_to_extract)})")
+                    
+                    frame_start_time = time.time()
+                    description = self._describe_image(frame_temp, context=context_text, image_type="video_frame")
+                    frame_time = time.time() - frame_start_time
+                    logger.info(f"   ✅ Klatka {second}s przetworzona w {frame_time:.1f}s")
                     
                     if description:
                         # Usuń prefix "[Opis grafiki]" dla klatek wideo
                         description = description.replace("[Opis grafiki] ", "")
                         frame_descriptions[second] = description
+                        previous_frame_description = description
+                        previous_second = second
                     
                     # Usuń temp file
                     frame_temp.unlink()
@@ -875,6 +956,89 @@ class DocumentProcessor:
                     element_id=f"video_second_{second}_{minutes:02d}m{seconds:02d}s"
                 ))
             
+            # ===== CZĘŚĆ 5: PODSUMOWANIE FILMU =====
+            logger.info("[STEP 5/5] Tworzenie podsumowania filmu z wszystkich klatek i audio")
+            
+            if frame_descriptions and (audio_segments or len(frame_descriptions) > 0):
+                # Przygotuj podsumowanie wszystkich klatek w kolejności czasowej
+                sorted_frames = sorted(frame_descriptions.items())
+                frames_summary_parts = []
+                
+                for second, desc in sorted_frames:
+                    minutes = second // 60
+                    secs = second % 60
+                    timestamp = f"{minutes:02d}:{secs:02d}"
+                    frames_summary_parts.append(f"[{timestamp}] {desc}")
+                
+                frames_summary = "\n".join(frames_summary_parts)
+                
+                # Przygotuj podsumowanie audio
+                audio_summary_parts = []
+                for seg in audio_segments:
+                    start_sec = int(seg.get("start", 0))
+                    end_sec = int(seg.get("end", 0))
+                    text = seg.get("text", "").strip()
+                    if text:
+                        start_min = start_sec // 60
+                        start_s = start_sec % 60
+                        end_min = end_sec // 60
+                        end_s = end_sec % 60
+                        audio_summary_parts.append(f"[{start_min:02d}:{start_s:02d}-{end_min:02d}:{end_s:02d}] {text}")
+                
+                audio_summary = "\n".join(audio_summary_parts) if audio_summary_parts else "[Brak transkrypcji audio]"
+                
+                # Utwórz prompt do podsumowania
+                summary_prompt = f"""Podsumuj film wideo na podstawie opisów wszystkich klatek i transkrypcji audio.
+
+OPISY KLATEK WIDEO (w kolejności czasowej):
+{frames_summary}
+
+TRANSKRYPCJA AUDIO:
+{audio_summary}
+
+INSTRUKCJE:
+1. Stwórz spójne podsumowanie całego filmu, uwzględniając wszystkie klatki w odpowiedniej kolejności
+2. Wskaż najważniejsze elementy, wydarzenia, akcje, które występują w filmie
+3. Połącz informacje z opisów klatek z transkrypcją audio
+4. Opisz główny temat/treść filmu
+5. Zwróć uwagę na zmiany, które zachodzą między klatkami
+6. Odpowiedz po polsku, szczegółowo i precyzyjnie"""
+                
+                # Wygeneruj podsumowanie przez Gemma 3
+                try:
+                    logger.info("Generowanie podsumowania filmu przez Gemma 3...")
+                    response = requests.post(
+                        "http://localhost:11434/api/generate",
+                        json={
+                            "model": VISION_MODEL,
+                            "prompt": summary_prompt,
+                            "stream": False
+                        },
+                        timeout=300
+                    )
+                    
+                    if response.status_code == 200:
+                        result = response.json()
+                        summary = result.get('response', '').strip()
+                        if summary:
+                            logger.info(f"Wygenerowano podsumowanie filmu ({len(summary)} znaków)")
+                            summary_chunk = DocumentChunk(
+                                id=str(uuid.uuid4()),
+                                content=f"[PODSUMOWANIE FILMU]\n{summary}",
+                                source_file=file_path.name,
+                                page_number=0,
+                                chunk_type='video_summary',
+                                element_id="video_summary"
+                            )
+                            chunks.append(summary_chunk)
+                            logger.info("Dodano podsumowanie filmu do fragmentów")
+                        else:
+                            logger.warning("Model zwrócił puste podsumowanie")
+                    else:
+                        logger.error(f"Błąd HTTP podczas generowania podsumowania: {response.status_code}")
+                except Exception as summary_error:
+                    logger.warning(f"Błąd podczas generowania podsumowania filmu: {summary_error}")
+            
             logger.info("=" * 70)
             logger.info(f"[OK] ZAKOŃCZONO PRZETWARZANIE WIDEO")
             logger.info(f"   Fragmentów utworzonych: {len(chunks)}")
@@ -917,9 +1081,16 @@ class DocumentProcessor:
         logger.debug(f"Podzielono tekst na {len(chunks)} fragmentów")
         return chunks
     
-    def _describe_image(self, image_path: Path) -> str:
-        """Generuje opis obrazu za pomocą modelu multimodalnego (Gemma 3:12B)"""
-        logger.debug(f"Rozpoczynanie opisu obrazu: {image_path}")
+    def _describe_image(self, image_path: Path, context: str = None, image_type: str = "unknown") -> str:
+        """
+        Generuje opis obrazu za pomocą modelu multimodalnego (Gemma 3:12B)
+        
+        Args:
+            image_path: Ścieżka do obrazu
+            context: Kontekst tekstowy przed/po obrazie (dla obrazów w dokumentach)
+            image_type: Typ obrazu - "document_image", "video_frame", "standalone_image"
+        """
+        logger.debug(f"Rozpoczynanie opisu obrazu: {image_path} (typ: {image_type})")
         start_time = time.time()
         
         try:
@@ -928,13 +1099,57 @@ class DocumentProcessor:
             with open(image_path, "rb") as image_file:
                 encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
             
+            # Buduj prompt w zależności od typu obrazu
+            if image_type == "document_image":
+                prompt = """To jest grafika z dokumentu. Opisz szczegółowo co znajduje się na tym obrazie.
+
+KONTEKST DOKUMENTU:
+{context}
+
+INSTRUKCJE:
+1. Opisz szczegółowo wszystkie widoczne elementy, obiekty, osoby, teksty, symbole, wykresy, diagramy
+2. Jeśli widzisz tekst na obrazie, przepisz go dokładnie
+3. Zwróć uwagę na szczegóły techniczne, oznaczenia, numery, etykiety
+4. Jeśli to schemat lub diagram, opisz strukturę i relacje między elementami
+5. Uwzględnij kontekst dokumentu - jeśli dokument dotyczy kamery, to obiektyw może wyglądać jak bakteria, ale to jest część kamery
+6. Odpowiedz po polsku, szczegółowo i precyzyjnie"""
+                if context:
+                    prompt = prompt.format(context=context)
+                else:
+                    prompt = prompt.replace("KONTEKST DOKUMENTU:\n{context}\n\n", "")
+            elif image_type == "video_frame":
+                prompt = """{context}
+
+To jest klatka z filmu wideo. Opisz szczegółowo co znajduje się na tej klatce.
+
+INSTRUKCJE:
+1. Opisz szczegółowo wszystkie widoczne elementy, obiekty, osoby, akcje, gesty, mimikę
+2. Zwróć uwagę na ruch, pozycję, kompozycję kadru
+3. Opisz kolory, oświetlenie, atmosferę sceny
+4. Jeśli widzisz tekst na ekranie, przepisz go dokładnie
+5. Uwzględnij kontekst poprzednich klatek - co się zmieniło, co jest kontynuacją
+6. Odpowiedz po polsku, szczegółowo i precyzyjnie"""
+                prompt = prompt.format(context=context) if context else prompt.replace("{context}\n\n", "")
+            elif image_type == "standalone_image":
+                prompt = """To jest zdjęcie. Rozpoznaj i opisz je szczegółowo.
+
+INSTRUKCJE:
+1. Opisz szczegółowo wszystkie widoczne elementy, obiekty, osoby, miejsca, przedmioty
+2. Jeśli widzisz tekst na zdjęciu, przepisz go dokładnie - co jest napisane
+3. Zwróć uwagę na kolory, kompozycję, oświetlenie, atmosferę
+4. Opisz kontekst sceny - gdzie może być zrobione zdjęcie, co przedstawia
+5. Jeśli to dokument, schemat, wykres - opisz strukturę i zawartość
+6. Odpowiedz po polsku, szczegółowo i precyzyjnie"""
+            else:
+                prompt = """Opisz szczegółowo co znajduje się na tym obrazie. Odpowiedz po polsku."""
+            
             logger.debug("Wysyłanie żądania do modelu Gemma 3:12B...")
             # Wysłanie zapytania do Ollama z modelem multimodalnym
             response = requests.post(
                 "http://localhost:11434/api/generate",
                 json={
                     "model": VISION_MODEL,
-                    "prompt": "Opisz szczegółowo co znajduje się na tym obrazie. Odpowiedz po polsku.",
+                    "prompt": prompt,
                     "stream": False,
                     "images": [encoded_image]
                 },
@@ -1339,8 +1554,21 @@ class RAGSystem:
         return ", ".join(info_parts)
     
     def query(self, question: str, n_results: int = 3, user_id: str = 'anonymous', session_id: str = None, 
-              temperature: float = 0.1, top_p: float = 0.85, top_k: int = 30, max_tokens: int = 1000) -> str:
-        """Odpowiada na pytanie użytkownika"""
+              temperature: float = 0.1, top_p: float = 0.85, top_k: int = 30, max_tokens: int = 1000,
+              sources: list = None) -> str:
+        """Odpowiada na pytanie użytkownika
+        
+        Args:
+            question: Pytanie użytkownika
+            n_results: Liczba wyników do wyszukania (używane tylko jeśli sources=None)
+            user_id: ID użytkownika
+            session_id: ID sesji
+            temperature: Temperatura dla modelu
+            top_p: Top-p dla modelu
+            top_k: Top-k dla modelu
+            max_tokens: Maksymalna liczba tokenów
+            sources: Opcjonalna lista już znalezionych źródeł (SourceReference). Jeśli podana, pomija wyszukiwanie.
+        """
         logger.info("="*60)
         logger.info(f"ROZPOCZYNAM ODPOWIADANIE NA PYTANIE: {question}")
         logger.info("="*60)
@@ -1368,36 +1596,39 @@ class RAGSystem:
             question = question_cleaned
             
             # Wyszukiwanie pasujących dokumentów (HYBRYDOWE: Vector + BM25 + Reranking)
-            logger.info("Etap 1: Hybrydowe wyszukiwanie pasujących dokumentów")
-            
-            if self.hybrid_search:
-                # Użyj hybrydowego wyszukiwania
-                try:
-                    hybrid_results = self.hybrid_search.search(question, top_k=n_results)
-                    
-                    # Konwertuj do formatu SourceReference
-                    results = []
-                    for doc in hybrid_results:
-                        results.append(SourceReference(
-                            id=doc['id'],
-                            content=doc['content'],
-                            source_file=doc['metadata'].get('source_file', ''),
-                            page_number=doc['metadata'].get('page', 0),
-                            chunk_type=doc['metadata'].get('chunk_type', 'text'),
-                            element_id=doc['metadata'].get('element_id', ''),
-                            distance=1.0 - doc.get('rerank_score', 0.5)  # Konwersja score na distance
-                        ))
-                    
-                    logger.info(f"Hybrydowe wyszukiwanie: znaleziono {len(results)} dokumentów")
-                    
-                except Exception as e:
-                    logger.error(f"Błąd hybrydowego wyszukiwania: {e}")
-                    logger.info("Fallback: używam prostego vector search")
-                    results = self.vector_db.search(question, n_results)
+            # Jeśli sources są już podane, użyj ich zamiast wyszukiwać
+            if sources is not None and len(sources) > 0:
+                logger.info(f"Etap 1: Używam już znalezionych źródeł ({len(sources)} dokumentów)")
+                results = sources
             else:
-                # Fallback: prosty vector search
-                logger.info("Używam prostego vector search (hybrid search niedostępny)")
-                results = self.vector_db.search(question, n_results)
+                logger.info("Etap 1: Hybrydowe wyszukiwanie pasujących dokumentów")
+                
+                if self.hybrid_search:
+                    # Użyj hybrydowego wyszukiwania
+                    try:
+                        hybrid_results = self.hybrid_search.search(question, top_k=n_results)
+                        
+                        # Konwertuj do formatu SourceReference
+                        results = []
+                        for doc in hybrid_results:
+                            results.append(SourceReference(
+                                content=doc['content'],
+                                source_file=doc['metadata'].get('source_file', ''),
+                                page_number=doc['metadata'].get('page', 0),
+                                element_id=doc['metadata'].get('element_id', ''),
+                                distance=1.0 - doc.get('rerank_score', 0.5)  # Konwersja score na distance
+                            ))
+                        
+                        logger.info(f"Hybrydowe wyszukiwanie: znaleziono {len(results)} dokumentów")
+                        
+                    except Exception as e:
+                        logger.error(f"Błąd hybrydowego wyszukiwania: {e}", exc_info=True)
+                        logger.info("Fallback: używam prostego vector search")
+                        results = self.vector_db.search(question, n_results)
+                else:
+                    # Fallback: prosty vector search
+                    logger.info("Używam prostego vector search (hybrid search niedostępny)")
+                    results = self.vector_db.search(question, n_results)
             
             if not results:
                 logger.warning("Nie znaleziono odpowiednich informacji w bazie danych")
@@ -1473,7 +1704,7 @@ Odpowiedź (bazując TYLKO na powyższych fragmentach):"""
                             'source_file': result.source_file,
                             'page': result.page_number,
                             'element_id': result.element_id,
-                            'chunk_type': result.chunk_type
+                            'chunk_type': 'text'  # SourceReference nie ma chunk_type, używamy domyślnej wartości
                         }
                         for result in results
                     ]

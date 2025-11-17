@@ -6,14 +6,14 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
-echo "🚀 Uruchamianie Systemu RAG - Frontend"
+echo "Uruchamianie Systemu RAG - Frontend"
 echo "======================================"
-echo "📁 Katalog projektu: $SCRIPT_DIR"
+echo "Katalog projektu: $SCRIPT_DIR"
 echo ""
-echo "📱 Dostęp lokalny: http://localhost:8501"
-echo "🌐 Dostęp sieć lokalna: http://$(hostname -I | awk '{print $1}'):8501"
+echo "Dostep lokalny: http://localhost:8501"
+echo "Dostep siec lokalna: http://$(hostname -I | awk '{print $1}'):8501"
 echo ""
-echo "👤 Logowanie: admin / admin123"
+echo "Logowanie: admin / admin123"
 echo ""
 
 ./venv_rag/bin/python3 -m streamlit run app/app.py \
